@@ -1,5 +1,5 @@
 ---
-name-: conversation-summary
+name: conversation-summary
 description: Summarize the current AI conversation into a new Obsidian markdown note and matching transcript file. Use when the user asks to save, export, log, archive, or summarize the current chat into an Obsidian vault, research note, markdown note, meeting note, decision log, or second-brain workflow.
 disable-model-invocation: true
 ---
