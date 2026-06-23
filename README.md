@@ -19,4 +19,5 @@ A collection of agent skills (slash commands and behaviors) loaded into Steve Be
 - [forge-interaction](common/engineering/forge-interaction/SKILL.md) — Work safely with GitHub and Gitea repositories, issues, pull requests, releases, and remote forge state.
 - [forge-preferences](common/personal/forge-preferences/SKILL.md) — Apply Steve's personal or project-specific GitHub/Gitea forge preferences.
 - [grilling](common/productivity/grilling/SKILL.md) — Interview the user relentlessly about a plan or design.
+- [project-context-pack](common/engineering/project-context-pack/SKILL.md) — Build and refresh a bounded repo context memory file so agents use disciplined search instead of repeated browsing.
 - [research-engineering](common/deprecated/dsp-research-dispatcher/SKILL.md) — Route DSP hardware and software research-engineering requests to the best specialist workflow and return a unified, decision-ready output.

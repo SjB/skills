@@ -19,4 +19,5 @@ Skills that work in all CLI agents.
 - [forge-interaction](engineering/forge-interaction/SKILL.md) — Work safely with GitHub and Gitea repositories, issues, pull requests, releases, and remote forge state.
 - [forge-preferences](personal/forge-preferences/SKILL.md) — Apply Steve's personal or project-specific GitHub/Gitea forge preferences.
 - [grilling](productivity/grilling/SKILL.md) — Interview the user relentlessly about a plan or design.
+- [project-context-pack](engineering/project-context-pack/SKILL.md) — Build and refresh a bounded repo context memory file so agents use disciplined search instead of repeated browsing.
 - [research-engineering](deprecated/dsp-research-dispatcher/SKILL.md) — Route DSP hardware and software research-engineering requests to the best specialist workflow and return a unified, decision-ready output.
