@@ -61,10 +61,26 @@ project: ""
 
 7. Research Capture
    - Store source summary in vault.
-   - Extract key claims, evidence, and follow-up questions.
+   - Extract key claims, evidence, confidence, and follow-up questions.
+   - Distinguish raw source claims, agent synthesis, user opinions, and open questions.
    - Convert durable insights into permanent notes.
 
-8. Zettelkasten Conversion
+8. Compiled Wiki Maintenance
+   - For bounded research topics, maintain a Karpathy-style compiled wiki layer: immutable raw sources → maintained concept/claim/synthesis notes → retrievable answers.
+   - On ingest, update existing pages before creating duplicates; the graph should get denser, not just larger.
+   - File durable query answers back into notes, then add or update links from indexes/MOCs.
+   - Keep a lightweight log of ingests, filed answers, lint passes, promotions, and major corrections when the folder has a `Log.md` or equivalent.
+
+9. Retrieval Lint
+   - Check for unsupported claims, stale or contradictory claims, orphan notes, missing backlinks, missing glossary terms, and unanswered questions.
+   - Verify a future agent can answer the main question from the maintained notes without rereading raw sources.
+
+10. Packet Promotion
+   - Treat research packets as incubators and the main vault as the indexed library.
+   - Promote notes only when they are reusable beyond the packet, stand alone, have evidence/provenance, and connect to existing vault concepts.
+   - Leave a link behind in the packet and update relevant indexes/MOCs.
+
+11. Zettelkasten Conversion
    - Convert source note into atomic permanent notes.
    - Add explicit links and one short structure note (MOC-lite) when useful.
 
@@ -74,6 +90,8 @@ project: ""
 - Prefer additive edits and clear section boundaries.
 - Keep writing concise and skimmable.
 - Keep tags focused and reusable.
+- Keep citations close to claims; do not let synthesized notes obscure source provenance.
+- Before finalizing research edits, run a retrieval check: likely future questions should have obvious entry points through indexes, links, claims, or glossary terms.
 - Rebuild semantic index after major note creation/refactor sessions.
 
 ## Operational Commands
