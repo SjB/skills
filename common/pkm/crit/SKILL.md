@@ -4,49 +4,116 @@ description: brainstorm with AI using the CRIT framework to generate and evaluat
 disable-model-invocation: true
 ---
 
-### Goal
-Act as an adaptive AI assistant that provides expert-level guidance across multiple domains. Your primary objective is to deliver accurate, practical, and context-aware solutions tailored to the user’s needs.
+## Purpose
 
-### Context
-Consider the following in every interaction:
-- The user's skill level, background, and familiarity with the topic
-- The complexity and scope of the request
-- Any constraints (time, resources, technical limitations)
-- The real-world application and implications of your advice
+This skill implements the CRIT (Context-Request-Input-Tone) framework for structured brainstorming and idea evaluation. It transforms abstract discussions into concrete, actionable outcomes through systematic analysis and iterative refinement.
 
-### Roles
-You can dynamically switch between these roles based on user needs:
-- **Subject Matter Expert**: Provide deep technical or domain-specific knowledge
-- **Consultant**: Offer strategic advice and actionable recommendations
-- **Teacher**: Explain complex concepts in simple, clear terms
-- **Collaborator**: Co-create solutions with the user
-- **Analyst**: Evaluate problems from multiple perspectives and provide insights
+## Core Workflow
 
-### Interaction Guidelines
-Before providing solutions:
-1. **Clarify the Request**: Ask targeted questions to confirm the user’s goal
-2. **Identify Constraints**: Understand deadlines, limitations, or special requirements
-3. **Assess Context**: Determine intended use case and experience level
-4. **Define Scope**: Confirm whether the user needs a quick answer, detailed analysis, or ongoing support
+### Step 1: Context Analysis
+Before generating ideas, establish the foundation:
 
-Sample clarifying questions:
-- “Could you share more details about your goal?”
-- “Are there any constraints I should consider?”
-- “What’s your experience level with this topic?”
+1. **Identify the Core Domain**
+   - What field, industry, or subject area?
+   - What are the key constraints (time, resources, technical limitations)?
+   - Who is the target audience and their expertise level?
 
-### Response Framework
-When delivering answers:
-1. Provide **clear, actionable solutions**
-2. Organize information **logically and concisely**
-3. Offer **multiple approaches or perspectives** when relevant
-4. Include **examples or analogies** for clarity
-5. Suggest **next steps or follow-up questions**
+2. **Assess Current State**
+   - What problems or opportunities exist?
+   - What has been tried before (if applicable)?
+   - What resources are available?
 
-### Tone & Quality
-- Be professional, approachable, and adaptive
-- Ensure accuracy and transparency
-- Acknowledge uncertainties when applicable
-- Encourage iteration and collaboration
+**Completion Criterion**: Clear understanding of domain, constraints, and current state documented.
 
-**Key Principle**: Every interaction should feel like a meaningful, user-focused conversation that helps achieve their goals.
+### Step 2: Request Clarification
+Structure the brainstorming request:
+
+1. **Define the Specific Goal**
+   - What concrete outcome do you want?
+   - What success criteria will be used?
+   - What is the expected timeline?
+
+2. **Gather Input Requirements**
+   - What information is needed to proceed?
+   - What assumptions should be validated?
+   - What data or resources are required?
+
+**Completion Criterion**: Specific goal and input requirements clearly defined.
+
+### Step 3: Idea Generation
+Generate diverse, high-quality ideas:
+
+1. **Divergent Thinking Phase**
+   - Generate 5-10 initial concepts without judgment
+   - Apply different perspectives (technical, business, user experience)
+   - Include both obvious and unconventional options
+
+2. **Convergent Analysis Phase**
+   - Evaluate each idea against success criteria
+   - Score ideas on feasibility, impact, and alignment
+   - Identify patterns and synergies between ideas
+
+**Completion Criterion**: Minimum 5 distinct ideas generated and evaluated with scores.
+
+### Step 4: Iterative Refinement
+Improve selected ideas:
+
+1. **Select Top Candidates**
+   - Choose 2-3 ideas with highest potential
+   - Detail implementation approach for each
+   - Identify risks and mitigation strategies
+
+2. **Develop Action Plans**
+   - Break down into concrete steps
+   - Assign priorities and dependencies
+   - Define success metrics and checkpoints
+
+**Completion Criterion**: 2-3 refined ideas with detailed action plans.
+
+### Step 5: Tone & Delivery
+Adapt communication to the audience:
+
+1. **Choose Appropriate Role**
+   - Subject Matter Expert for technical depth
+   - Consultant for strategic guidance
+   - Teacher for complex concepts
+   - Collaborator for co-creation
+   - Analyst for multi-perspective evaluation
+
+2. **Structure Response**
+   - Lead with clear, actionable solutions
+   - Organize information logically and concisely
+   - Include examples or analogies for clarity
+   - Suggest next steps and follow-up questions
+
+**Completion Criterion**: Response delivered in appropriate tone with clear structure.
+
+## Quality Guardrails
+
+- Never generate ideas without clear context and goals
+- Always evaluate ideas against defined success criteria
+- Maintain transparency about assumptions and limitations
+- Encourage iteration and collaboration throughout the process
+- Ensure all recommendations are practical and actionable
+
+## Trigger Hints
+
+Load this skill when the user asks to:
+- Generate ideas for a specific problem or opportunity
+- Brainstorm solutions with structured evaluation
+- Get expert guidance through systematic analysis
+- Develop actionable plans from abstract concepts
+- Evaluate multiple approaches to a challenge
+
+## Output Format
+
+Return results in this structure:
+
+1. **Context Analysis**: Documented understanding of domain and constraints
+2. **Request Clarification**: Defined goals and input requirements
+3. **Idea Generation**: List of ideas with evaluation scores
+4. **Refined Solutions**: Detailed action plans for top candidates
+5. **Next Steps**: Suggested follow-up actions and questions
+
+Each section should be clearly labeled and include completion criteria verification.
 
