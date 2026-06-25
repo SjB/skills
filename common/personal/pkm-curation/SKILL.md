@@ -30,10 +30,10 @@ Use this skill when working inside a Markdown-first vault that values curation o
 
 ```bash
 # Search by filename
-fd --type f ".md" "$HOME/Documents/nca-notes" | rg -i "keyword"
+fd --type f ".md" "path/to/obsidian-vault" | rg -i "keyword"
 
 # Search by content
-rg -l "keyword" "$HOME/Documents/nca-notes" --include "*.md"
+rg -l "keyword" "path/to/obsidian-vault" --include "*.md"
 ```
 
 ## Curate existing note
@@ -51,13 +51,13 @@ rg -l "keyword" "$HOME/Documents/nca-notes" --include "*.md"
 Search for `[[Note Title]]` across the vault to find backlinks:
 
 ```bash
-rg -l "\\[\\[Note Title\\]\\]" "$HOME/Documents/nca-notes" --include "*.md"
+rg -l "\\[\\[Note Title\\]\\]" "path/to/obsidian-vault" --include "*.md"
 ```
 
 ### Find index notes
 
 ```bash
-fd --type f "Index" "$HOME/Documents/nca-notes"
+fd --type f "Index" "path/to/obsidian-vault"
 ```
 
 ## Operating Rules

@@ -8,7 +8,8 @@ Create exactly one new Obsidian summary note for the current conversation. Also 
 
 ## Default location
 
-- Write notes to `~/Documents/nca-notes/AI Conversation Summaries/` unless the user requests another path.
+- Write notes to `obsidian vault` unless the user requests another path.
+- Ask if you don't know the location of the obsidian vault.
 - Create the directory if it does not exist.
 - Never overwrite an existing note.
 - Never append to an existing note unless the user explicitly asks.
@@ -199,8 +200,8 @@ Use these exact fallbacks when needed:
 
 ## File paths
 
-- Summary: `~/Documents/nca-notes/AI Conversation Summaries/{{title}}.md`
-- Transcript: `~/Documents/nca-notes/AI Conversation Summaries/{{title}}_transcript.md`
+- Summary: `AI Conversation Summaries/{{title}}.md`
+- Transcript: `AI Conversation Summaries/{{title}}_transcript.md`
 
 ## Safety rules
 
