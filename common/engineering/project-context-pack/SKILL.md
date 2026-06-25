@@ -1,44 +1,43 @@
 ---
 name: project-context-pack
-description: Use when the user wants a bounded repo context pack, project map, codebase index, cached memory file, or fewer repeated codebase searches.
+description: Use when the user wants a bounded repo context pack, project map, codebase index, or cached memory file so later work uses fd/rg/tree-sitter/LSP instead of repeated browsing.
+disable-model-invocation: true
 ---
 
 # Project Context Pack
 
-Create or refresh a bounded project memory file, then use it as the navigation map for the repo.
+Create or refresh a bounded project memory file, then use it to navigate the codebase with discipline.
 
-## Target
+## Output target
 
 Default cache path: `.agent/project-context.md` at the project root.
 
-Use a user-named path when provided. If the user did not explicitly ask for a cache file, ask before the first write into the repo. Never write secrets, credentials, private keys, tokens, browser data, personal data, or raw `.env*` content into the cache.
+If the user names another path, use that path. If writing into the repo is risky or unexpected, ask before writing. Never write secrets into the cache.
 
 ## Procedure
 
-1. **Root.** Prefer `git rev-parse --show-toplevel`; otherwise use `pwd`. Completion: the pack records the absolute root and current relative working directory.
-2. **Survey.** Use `fd` and `rg` first; fall back to `find` and `grep`. Respect ignore files by default. Exclude `.git`, dependency directories, build outputs, caches, generated files, binaries, and large artifacts. Completion: the pack has a bounded file inventory and top-level tree before broad file reads.
-3. **Classify.** Detect language, framework, package manager, build/test tools, docs, agent guidance, and likely entry points from filenames and small config reads. Completion: every project-type claim cites at least one file.
-4. **Read selectively.** Read only high-value files by default: README, agent guidance, package/build config, docs index, main entry points, and files directly relevant to the user's current request. Cap per-file and total content. Completion: every included file has a recorded reason.
-5. **Index before browsing.** For code questions, prefer tree-sitter or LSP when available. Otherwise use `rg` for definitions, exports, imports, routes, tests, commands, TODOs, and error strings. Completion: the pack has search or symbol notes before any broad source reading.
-6. **Cache.** Create or update the memory file with the template below. Completion: the file records timestamp, root, status, commands/searches used, files inspected, exclusions, and next navigation rules.
-7. **Reuse.** Before future exploration, read the cache first. If stale or insufficient, refresh the smallest relevant section instead of rebuilding everything. Completion: subsequent work uses the cache or explains why it was bypassed.
+1. **Find the root.** Prefer `git rev-parse --show-toplevel`; otherwise use `pwd`. Completion: you know the root and current relative working directory.
+2. **Inventory cheaply.** Use `fd` and `rg` first; fall back to `find` and `grep`. Respect ignore files by default. Exclude `.git`, dependency directories, build outputs, caches, generated files, binaries, and large artifacts. Completion: you have a bounded file inventory and top-level tree without opening many files.
+3. **Classify the project.** Detect language, framework, package manager, build/test tools, docs, agent guidance, and likely entry points from filenames and small config reads. Completion: the pack names the project type and the files that justify it.
+4. **Read selectively.** Read only high-value files by default: README, agent guidance, package/build config, docs index, main entry points, and files directly relevant to the user's current request. Cap per-file and total content. Completion: every included file has a reason.
+5. **Index symbols before browsing.** For code questions, prefer tree-sitter or LSP when available. Otherwise use `rg` patterns for definitions, exports, imports, routes, tests, commands, TODOs, and error strings. Completion: the pack has symbol/search notes before any broad source reading.
+6. **Write the memory file.** Create or update the cache with the template below. Completion: the file exists and records when it was generated, commands/searches used, files inspected, and next navigation rules.
+7. **Use the cache.** Before future exploration, read the cache first. If stale or insufficient, refresh the smallest relevant section instead of rebuilding everything. Completion: subsequent work cites the cache and avoids repeated file browsing.
 
 ## Navigation discipline
 
-- Do not wander file-by-file. Start with the cache, `fd`, `rg`, tree-sitter, or LSP.
+- Do not wander file-by-file. Start with `fd`, `rg`, tree-sitter, LSP, or the cache.
 - Track inspected files in the memory file.
 - Prefer narrow searches over whole-file reads.
 - Prefer symbol outlines and matching snippets over full content.
-- Re-read a file only when it changed, the cache is stale, or exact details are needed.
-- Ask before full-content extraction, large scans, or sensitive-file inspection.
+- Re-read a file only when it changed, the cache is stale, or the exact details are needed.
+- Ask before full-content extraction, large scans, or including sensitive files such as `.env`, credentials, private keys, tokens, browser profiles, or personal data.
 
 ## Useful command patterns
 
 ```bash
 root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 cd "$root"
-
-date -Iseconds
 
 # Inventory
 fd --type f --hidden --exclude .git 2>/dev/null || find . -type f -not -path './.git/*'
