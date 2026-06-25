@@ -12,7 +12,7 @@ Skills are organized into buckets based on where they can be used and their cate
 
 Skill are organized into categories based on their function. For example, `/common/misc/` is a bucket for miscellaneous skills that work in all CLI agents.
 
-If we have a skill that is only relevant to a specific agent, we can put it in an agent-specific bucket. For example, if we have a skill that is only relevant to the `opencode` agent, we can put it in `/opencod/misc`.
+If we have a skill that is only relevant to a specific agent, we can put it in an agent-specific bucket. For example, if we have a skill that is only relevant to the `opencode` agent, we can put it in `/opencode/misc`.
 
 
 ## list of categories
@@ -20,10 +20,28 @@ If we have a skill that is only relevant to a specific agent, we can put it in a
 - `productivity/` — daily non-code workflow tools
 - `misc/` — kept around but rarely used
 - `personal/` — tied to my own setup, not promoted
+- `pkm/` — personal knowledge management
 - `in-progress/` — drafts not yet ready to ship
 - `deprecated/` — no longer used
-
 
 Each bucket folder has a `README.md` that lists every skill in the bucket with a one-line description, with the skill name linked to its `SKILL.md`. Bucket `README.md`s and the top-level `README.md` group entries into **User-invoked** and **Model-invoked**.
 
 Every `SKILL.md` is either user-invoked (`disable-model-invocation: true`, reachable only by the human) or model-invoked (model- or user-reachable). For the full definitions, description conventions, and why a user-invoked skill can invoke model-invoked skills but never another user-invoked one, see [docs/invocation.md](./docs/invocation.md).
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in Gitea on gitea.sagacity.ca. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five-label vocabulary with default names (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout. See `docs/agents/domain.md`.
+
+### ADR wiki
+
+Gitea wiki at git@gitea.sagacity.ca:steve/Skills.wiki.git, cloned into docs/adr/, SSH key auth. See `docs/agents/adr-wiki.md`.
