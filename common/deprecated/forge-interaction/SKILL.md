@@ -1,26 +1,41 @@
 ---
 name: forge-interaction
-description: Use when the user wants forge work such as opening a PR, creating or listing issues, checking CI, looking at the repo, pushing a branch, publishing changes, or making a release on GitHub or Gitea.
+description: Use when the user wants forge work such as opening a PR, creating or listing issues, checking CI, looking at the repo, pushing a branch, publishing changes, or making a release on GitHub or Gitea. This skill now delegates to specialized skills for better predictability.
 ---
 
-# Forge Interaction
+# Forge Interaction (Router)
 
-Use this skill for Git forge work on GitHub or Gitea, especially when the user asks to:
+This skill has been refactored into specialized skills for better predictability and maintainability:
 
-- open a PR;
-- create, list, modify, or comment on issues;
-- create, list, modify, comment on, or merge pull requests;
-- check CI;
-- look at the repo on the forge;
-- push a branch;
-- publish changes;
-- make or inspect a release.
+- **GitHub**: Use `/forge-github` for GitHub repositories, issues, pull requests, releases, or CI
+- **Gitea**: Use `/forge-gitea` for Gitea repositories, issues, pull requests, releases, or CI
 
 ## Purpose
 
-Choose the correct forge CLI and use it to interact with issues, pull requests, releases, CI, and repository state.
+This router skill delegates to the appropriate specialized forge interaction skill based on the target forge. Each specialized skill handles one forge type completely, making them more predictable and easier to maintain.
 
-This skill is intended to perform forge actions, including mutating actions, when the user asks for them. Do not turn every requested forge action into a confirmation loop; if the user clearly asks to create, edit, comment, publish, or release, do the requested action after selecting the correct forge and tool.
+## When to use:
+
+- If you're unsure which forge you're working with, use this skill and it will guide you
+- For general forge work without specifying the forge type
+- When you want the system to figure out which specialized skill to use
+
+## Delegation Logic
+
+The router analyzes your request and determines whether to delegate to:
+
+1. **GitHub skill** (`/forge-github`) - for GitHub repositories and workflows
+2. **Gitea skill** (`/forge-gitea`) - for Gitea repositories and workflows
+
+Each specialized skill contains the complete decision tree and implementation for its respective forge type.
+
+## Recommendation
+
+For most predictable results, use the specialized skills directly:
+- `/forge-github` when working with GitHub
+- `/forge-gitea` when working with Gitea
+
+This separation follows the principle of single responsibility and makes each skill more focused and reliable.
 
 ## Strict Decision Tree
 
