@@ -1,7 +1,6 @@
 ---
 name: pkm-curation
 description: Curate an Obsidian-style personal knowledge vault by classifying notes, normalizing frontmatter, improving structure, extracting atomic notes, and adding meaningful wikilinks. 
-disable-model-invocation: true
 ---
 
 # PKM Curation
