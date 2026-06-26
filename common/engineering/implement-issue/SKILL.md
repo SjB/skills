@@ -159,7 +159,7 @@ Assemble a single prompt that the child agent will receive. Include:
   6. Push the branch: `git push origin <branch-name>`
   7. Create a PR with: link to the issue, one-sentence summary, short key-changes list
   8. Comment on the issue with the PR link: `tea comment <N> "PR opened: <url>"`
-  9. Change the issue label to `in-review`: `tea issues edit <N> --add-labels "in-review" --remove-labels "in-progress"`
+  9. Change the issue label to `needs-review`: `tea issues edit <N> --add-labels "needs-review" --remove-labels "in-progress"`
   10. Print `DONE — issue #<N>`
 - **Failure instruction**: "If any step fails, report where you stopped and what remains for manual recovery. Print the exact commands needed."
 
