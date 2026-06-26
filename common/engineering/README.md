@@ -2,6 +2,7 @@
 
 ## User-invoked
 
+- [implement-issue](implement-issue/SKILL.md) — Dispatch a child agent in an isolated git worktree to implement a ready-for-agent issue end-to-end.
 - [grill-with-docs](grill-with-docs/SKILL.md) — A relentless interview to sharpen a plan or design, which also creates docs (ADRs and glossary) as we go.
 - [improve-codebase-architecture](improve-codebase-architecture/SKILL.md) — Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
 - [project-context-pack](project-context-pack/SKILL.md) — Build and refresh a bounded repo context memory file so agents use disciplined search instead of repeated browsing.
