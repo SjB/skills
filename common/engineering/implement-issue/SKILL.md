@@ -1,5 +1,6 @@
 ---
 name: implement-issue
+description: Dispatch a child agent in an isolated git worktree to implement a `ready-for-agent` issue end-to-end.
 disable-model-invocation: true
 ---
 
@@ -8,6 +9,17 @@ disable-model-invocation: true
 Dispatch a child agent in an isolated git worktree to implement a `ready-for-agent` issue end-to-end — explore, implement with TDD, run the full quality gate, push a branch, create a PR, comment on the issue, and update labels.
 
 The issue tracker conventions live in [`docs/agents/issue-tracker.md`](../../../docs/agents/issue-tracker.md) and the triage label vocabulary in [`docs/agents/triage-labels.md`](../../../docs/agents/triage-labels.md). Both should have been provided to you already.
+
+## Invocation
+
+```
+/skill:implement-issue <N> [--agent <name>] [--base <branch>] [--force]
+```
+
+- `<N>` — required, the issue number
+- `--agent <name>` — optional, one of `pi`, `opencode`, `goose`, `codex`, `claude`. If omitted, auto-detected from the process tree.
+- `--base <branch>` — optional, target base branch (default: repo default branch).
+- `--force` — optional, allow overwriting an existing worktree.
 
 ## Process
 
@@ -79,6 +91,37 @@ ls -d ../<repo-name>-issue-<N>
 
 If it exists, report and stop. Let the user override with `--force`.
 
+#### 1h. Running inside a tmux session
+
+Confirm `$TMUX` is set. If not, report "This skill requires a tmux session. Start tmux and rerun." and stop.
+
+#### 1i. Detect the agent binary
+
+If `--agent <name>` was provided in the invocation args, use that name directly. Otherwise, run the platform-appropriate detection script:
+
+```bash
+bash ./detect-agent-linux.sh
+# or on macOS:
+bash ./detect-agent-macos.sh
+```
+
+The script outputs the agent name on success (exit 0), or nothing on failure (exit 1).
+
+If detection fails (no `--agent` flag and script returns nothing), report:
+
+> Could not detect which agent is running. Rerun with `--agent <name>`.
+> Supported agents: pi, opencode, goose, codex, claude.
+
+Stop.
+
+If detection succeeds, confirm the binary is on PATH:
+
+```bash
+command -v <agent>
+```
+
+If the binary is not found, report "Agent binary '<agent>' not found on PATH." and stop.
+
 ### 2. Setup
 
 #### 2a. Fetch latest base
@@ -99,7 +142,7 @@ tea issues edit <N> --add-labels "in-progress" --remove-labels "ready-for-agent"
 git worktree add -b <branch-name> ../<repo-name>-issue-<N> <base>
 ```
 
-### 3. Compose the child prompt
+### 3. Compose and write the child prompt
 
 Assemble a single prompt that the child agent will receive. Include:
 
@@ -120,15 +163,46 @@ Assemble a single prompt that the child agent will receive. Include:
   10. Print `DONE — issue #<N>`
 - **Failure instruction**: "If any step fails, report where you stopped and what remains for manual recovery. Print the exact commands needed."
 
-### 4. Launch the child
-
-Open a new tmux window in the worktree directory and run `pi` with the composed prompt:
+Write the full prompt to a temp file:
 
 ```bash
-tmux new-window -c <absolute-worktree-path> "pi --prompt '<escaped-prompt>'"
+cat > /tmp/issue-<N>-prompt.md <<'PROMPT_EOF'
+<full-composed-prompt>
+PROMPT_EOF
 ```
 
-The pane stays open after the child completes so the user can review the output.
+### 4. Launch the child
+
+Look up the full shell command from the dispatch table below, using the agent name detected in step 1i.
+
+| Agent | Shell command |
+|-------|--------------|
+| `pi` | `pi -p @/tmp/issue-<N>-prompt.md` |
+| `opencode` | `opencode run -f /tmp/issue-<N>-prompt.md` |
+| `goose` | `goose run -i /tmp/issue-<N>-prompt.md` |
+| `codex` | `cat /tmp/issue-<N>-prompt.md \| codex exec` |
+| `claude` | `cat /tmp/issue-<N>-prompt.md \| claude -p` |
+| *unknown* | `cat /tmp/issue-<N>-prompt.md \| <binary>` |
+
+Substitute the actual temp file path and issue number, then launch in a new tmux window:
+
+```bash
+tmux new-window -n "issue-<N>-<repo>" -c <absolute-worktree-path> "<shell-command>"
+```
+
+For example, with pi:
+
+```bash
+tmux new-window -n "issue-42-myrepo" -c ../myrepo-issue-42 "pi -p @/tmp/issue-42-prompt.md"
+```
+
+The window stays open after the child completes so the user can review the output.
+
+After tmux launches, clean up the temp file:
+
+```bash
+rm /tmp/issue-<N>-prompt.md
+```
 
 ### 5. Print summary
 
@@ -137,7 +211,8 @@ After launching, print:
 - Worktree path
 - Branch name
 - Base branch
-- Tmux window (so the user can find it)
+- Agent used
+- Tmux window name (so the user can find it)
 - Cleanup command: `git worktree remove <worktree-path> && git worktree prune`
 
 The parent's turn ends here. The user can dispatch another issue immediately.
