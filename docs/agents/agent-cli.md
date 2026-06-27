@@ -7,7 +7,7 @@ The CLI agent used by `/implement-issue` for spawning child agents in isolated g
 ```yaml
 selected: pi
 binary: pi
-args: "-p @{prompt}"
+args: "@{prompt}"
 ```
 
 ## Fields

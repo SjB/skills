@@ -45,3 +45,7 @@ Single-context layout. See `docs/agents/domain.md`.
 ### ADR wiki
 
 Gitea wiki at git@gitea.sagacity.ca:steve/Skills.wiki.git, cloned into docs/adr/, SSH key auth. See `docs/agents/adr-wiki.md`.
+
+### Agent CLI
+
+`pi` used for child agents. See `docs/agents/agent-cli.md`.
