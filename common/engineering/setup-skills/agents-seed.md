@@ -8,30 +8,31 @@ This file is the source of truth for all supported CLI agents. It is read by `se
 agents:
   - name: pi
     binary: pi
-    args: "-p @{prompt}"
-    description: "My primary agent harness. Accepts prompt file via -p flag."
+    args: "@{prompt}"
+    description: "My primary agent harness. Accepts prompt file via @{prompt}."
 
   - name: opencode
     binary: opencode
-    args: "run -f @{prompt}"
-    description: "OpenCode agent. Accepts prompt file via -f flag."
+    args: ""
+    description: "OpenCode agent. Pipes stdin via cat."
+    note: "Uses stdin piping: args must be empty, prompt via pipe."
 
   - name: goose
     binary: goose
-    args: "run -i @{prompt}"
+    args: ""
     description: "Goose agent. Accepts prompt file via -i flag."
+    note: "Uses stdin piping: args must be empty, prompt via pipe."
 
   - name: codex
     binary: codex
-    args: ""
-    description: "OpenAI Codex. Pipes stdin via cat."
-    note: "Uses stdin piping: args must be empty, prompt via pipe."
+    args: "@{prompt}"
+    description: "OpenAI Codex. Accepts prompt file via @{prompt}."
 
   - name: claude
     binary: claude
-    args: "-p"
+    args: ""
     description: "Anthropic Claude CLI. Pipes stdin via cat."
-    note: "Uses stdin piping: args is just the prompt flag, prompt via pipe."
+    note: "Uses stdin piping: args must be empty, prompt via pipe."
 ```
 
 ## Field meanings

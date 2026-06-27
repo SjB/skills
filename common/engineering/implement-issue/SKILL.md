@@ -39,17 +39,9 @@ Supported agents and their configurations are defined in `agents-seed.md` in the
 
 Stop on any failure and report clearly what needs fixing. Do not proceed.
 
-#### 1a. `tea` CLI
-
-Confirm `tea` is on PATH. If missing, tell the user to install it and stop.
-
 #### 1b. Issue exists and is open
 
-```bash
-tea issue <N> -o json
-```
-
-If the issue is not found (404) or state is not `open`, report and stop.
+If the issue is not found or state is not `open`, report and stop.
 
 #### 1c. Issue is labeled `ready-for-agent`
 
@@ -58,10 +50,6 @@ Check that the issue's labels include `ready-for-agent`. If not, report the curr
 #### 1d. No open blockers
 
 Read the issue body for "Blocked by #M" references. For each referenced issue, check whether it is open:
-
-```bash
-tea issue <M> -o json
-```
 
 If any blocker is open, report the blocking issues and stop.
 
@@ -73,9 +61,7 @@ Default base is the repo's default branch — infer from `git ls-remote --heads 
 git ls-remote --heads origin <base>
 ```
 
-If the remote is unreachable or the base branch doesn't exist, report and stop. SSH auth issues (e.g. `Permission denied (publickey)`) are a failure — tell the user which key is needed.
-
-> **SSH note:** `tea` uses HTTPS and may work when git-over-SSH does not. If the first `git ls-remote` fails with an SSH error, try `export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)` and retry before failing.
+If the remote is unreachable or the base branch doesn't exist, report and stop.
 
 #### 1f. Branch name is free
 
@@ -131,19 +117,11 @@ Stop.
 
 ### 2. Setup
 
-#### 2a. Fetch latest base
+#### 2a. Label the issue `in-progress`
 
-```bash
-git fetch origin <base>
-```
+Apply the `in-progress` triage label.
 
-#### 2b. Label the issue `in-progress`
-
-```bash
-tea issues edit <N> --add-labels "in-progress" --remove-labels "ready-for-agent"
-```
-
-#### 2c. Create the worktree
+#### 2b. Create the worktree
 
 ```bash
 git worktree add -b <branch-name> ../<repo-name>-issue-<N> <base>
