@@ -17,9 +17,21 @@ The issue tracker conventions live in [`docs/agents/issue-tracker.md`](../../../
 ```
 
 - `<N>` — required, the issue number
-- `--agent <name>` — optional, one of `pi`, `opencode`, `goose`, `codex`, `claude`. If omitted, auto-detected from the process tree.
+- `--agent <name>` — **DEPRECATED**: this argument is ignored. The agent CLI is read from `docs/agents/agent-cli.md`, which is set up by `/setup-skills` Section E. Rerun `/setup-skills` to change the agent.
 - `--base <branch>` — optional, target base branch (default: repo default branch).
 - `--force` — optional, allow overwriting an existing worktree.
+
+## Agent CLI Configuration
+
+The CLI agent for child agents is configured in `docs/agents/agent-cli.md`. This file is written by `/setup-skills` Section E and contains:
+
+```yaml
+selected: <agent-name>
+binary: <binary-name>
+args: "<arguments including @{prompt}>"
+```
+
+Supported agents and their configurations are defined in `agents-seed.md` in the setup-skills skill directory.
 
 ## Process
 
@@ -95,32 +107,27 @@ If it exists, report and stop. Let the user override with `--force`.
 
 Confirm `$TMUX` is set. If not, report "This skill requires a tmux session. Start tmux and rerun." and stop.
 
-#### 1i. Detect the agent binary
+#### 1i. Read agent CLI config
 
-If `--agent <name>` was provided in the invocation args, use that name directly. Otherwise, run the platform-appropriate detection script:
+Read `docs/agents/agent-cli.md` and parse the `selected`, `binary`, and `args` fields. If the file is missing or malformed, report:
 
-```bash
-bash ./detect-agent-linux.sh
-# or on macOS:
-bash ./detect-agent-macos.sh
-```
-
-The script outputs the agent name on success (exit 0), or nothing on failure (exit 1).
-
-If detection fails (no `--agent` flag and script returns nothing), report:
-
-> Could not detect which agent is running. Rerun with `--agent <name>`.
-> Supported agents: pi, opencode, goose, codex, claude.
+> Agent CLI not configured. Run `/setup-skills` Section E to configure the CLI agent for child agents.
 
 Stop.
 
-If detection succeeds, confirm the binary is on PATH:
+#### 1j. Validate binary on PATH
+
+Confirm the configured `binary` is on PATH:
 
 ```bash
-command -v <agent>
+command -v <binary>
 ```
 
-If the binary is not found, report "Agent binary '<agent>' not found on PATH." and stop.
+If the binary is not found, fail with:
+
+> Agent '<binary>' not found on PATH — rerun /setup-skills to reconfigure.
+
+Stop.
 
 ### 2. Setup
 
@@ -173,27 +180,49 @@ PROMPT_EOF
 
 ### 4. Launch the child
 
-Look up the full shell command from the dispatch table below, using the agent name detected in step 1i.
+#### 4a. Detect runtime environment
 
-| Agent | Shell command |
-|-------|--------------|
-| `pi` | `pi -p @/tmp/issue-<N>-prompt.md` |
-| `opencode` | `opencode run -f /tmp/issue-<N>-prompt.md` |
-| `goose` | `goose run -i /tmp/issue-<N>-prompt.md` |
-| `codex` | `cat /tmp/issue-<N>-prompt.md \| codex exec` |
-| `claude` | `cat /tmp/issue-<N>-prompt.md \| claude -p` |
-| *unknown* | `cat /tmp/issue-<N>-prompt.md \| <binary>` |
-
-Substitute the actual temp file path and issue number, then launch in a new tmux window:
+Check if `mise` is available:
 
 ```bash
-tmux new-window -n "issue-<N>-<repo>" -c <absolute-worktree-path> "<shell-command>"
+command -v mise
 ```
 
-For example, with pi:
+If available, use `mise x --allow-env='*' --` as the runner prefix. Otherwise, fall back to `$SHELL -c`.
+
+#### 4b. Compose the agent command
+
+Substitute `@{prompt}` in the configured `args` with the absolute path to the temp prompt file:
+
+- If `args` is non-empty: the agent command is `<binary> <substituted-args>`
+- If `args` is empty (stdin-piping agents): the agent command is `cat <prompt-file> | <binary>`
+
+#### 4c. Compose the full tmux command
 
 ```bash
-tmux new-window -n "issue-42-myrepo" -c ../myrepo-issue-42 "pi -p @/tmp/issue-42-prompt.md"
+tmux new-window -n "issue-<N>-<repo-slug>" -c <absolute-worktree-path> "<runner-prefix> <agent-command>"
+```
+
+**With mise:**
+```bash
+tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "mise x --allow-env='*' -- <binary> <args-with-prompt-subbed>"
+```
+
+**Without mise (fallback):**
+```bash
+tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "$SHELL -c '<binary> <args-with-prompt-subbed>'"
+```
+
+For stdin-piping agents (empty args), wrap the pipe command:
+
+**With mise:**
+```bash
+tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "mise x --allow-env='*' -- sh -c 'cat <prompt-file> | <binary>'"
+```
+
+**Without mise:**
+```bash
+tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "$SHELL -c 'cat <prompt-file> | <binary>'"
 ```
 
 The window stays open after the child completes so the user can review the output.
@@ -211,7 +240,7 @@ After launching, print:
 - Worktree path
 - Branch name
 - Base branch
-- Agent used
+- Agent used (from `docs/agents/agent-cli.md`)
 - Tmux window name (so the user can find it)
 - Cleanup command: `git worktree remove <worktree-path> && git worktree prune`
 
