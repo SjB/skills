@@ -12,6 +12,7 @@ Scaffold the per-repo configuration that the engineering skills assume:
 - Triage labels: the strings used for the canonical triage roles, labels are defined in `triage-labels.md`
 - Domain docs: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
 - **ADR wiki** — where ADRs are stored (forge wiki, cloned into `docs/adr/`), and the clone/push workflow
+- **Agent CLI** — which CLI agent to use for child agents in `/implement-issue`
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
@@ -29,7 +30,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 
 ### 2. Present findings and ask
 
-Summarise what's present and what's missing. Then walk the user through the four decisions **one at a time** - present a section, get the user's answer, then move to the next. Don't dump all three at once.
+Summarise what's present and what's missing. Then walk the user through the five decisions **one at a time** - present a section, get the user's answer, then move to the next. Don't dump all at once.
 
 Assume the user does not know what these terms mean. Each section starts with a short explainer (what it is, why these skills need it, what changes if they pick differently). Then show the choices and the default.
 
@@ -89,12 +90,43 @@ After the forge is confirmed, present the workflow and confirm:
 
 Record the answers in `docs/agents/adr-wiki.md`.
 
+**Section E — Agent CLI.**
+
+> Explainer: The `implement-issue` skill dispatches a child agent in an isolated git worktree. It needs to know which CLI agent to spawn (pi, opencode, goose, codex, or claude) and how to invoke it. This configuration lives in `docs/agents/agent-cli.md` and is set up once per repo so every developer uses the same agent by default.
+
+Read `agents-seed.md` from this skill directory to get the list of known agents. Present them as a numbered menu:
+
+```
+Available agents:
+1. pi       — My primary agent harness. Accepts prompt file via -p flag.
+2. opencode — OpenCode agent. Accepts prompt file via -f flag.
+3. goose    — Goose agent. Accepts prompt file via -i flag.
+4. codex    — OpenAI Codex. Pipes stdin via cat.
+5. claude   — Anthropic Claude CLI. Pipes stdin via cat.
+```
+
+Ask the user to type the agent name (or number):
+
+> Which CLI agent should `/implement-issue` use for child agents? (default: pi)
+
+Validate the selected agent's binary is on PATH:
+
+```bash
+command -v <selected-binary>
+```
+
+If the binary is not found, tell the user:
+
+> Binary '<binary>' not found on PATH. Please install it or choose a different agent.
+
+Loop until a valid binary is found or the user quits.
+
 ### 3. Confirm and edit
 
 Show the user a draft of:
 
 - The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
-- The contents of `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/domain.md`, and `docs/agents/adr-wiki.md`
+- The contents of `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/domain.md`, `docs/agents/adr-wiki.md`, and `docs/agents/agent-cli.md`
 
 Let them edit before writing.
 
@@ -131,23 +163,36 @@ The block:
 
 [one-line summary — forge, wiki URL, auth method]. See `docs/agents/adr-wiki.md`.
 
+### Agent CLI
+
+[one-line summary of the configured CLI agent]. See `docs/agents/agent-cli.md`.
+
  ## Project Context Pack
 
 [Agent memory file that describes the repo's context, codebase, and navigation rules]. See `.agents/project-context.md`.
 
 ```
 
-Then write the four docs files using the seed templates in this skill folder as a starting point:
+Then write the docs files:
 
-- [issue-tracker-github.jd](./issue-tracker-github.md) — GitHub issue tracker
+- [issue-tracker-github.md](./issue-tracker-github.md) — GitHub issue tracker
 - [issue-tracker-gitlab.md](./issue-tracker-gitlab.md) — GitLab issue tracker
 - [issue-tracker-gitea.md](./issue-tracker-gitea.md) — Gitea issue tracker
 - [triage-labels.md](./triage-labels.md) — label mapping
 - [domain.md](./domain.md) — domain doc consumer rules + layout
 - [adr-wiki.md](./adr-wiki.md) — ADR wiki clone and push workflow
+- `docs/agents/agent-cli.md` — agent CLI config with `selected`, `binary`, and `args` fields
+
+For Section E, write `docs/agents/agent-cli.md` with the selected agent:
+
+```yaml
+selected: <agent-name>
+binary: <binary-name>
+args: "<args-from-seed>"
+```
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 
 ### 5. Done
 
-Tell the user the setup is complete, which engineering skills will now read from these files, and that ADR changes are pushed to the forge wiki at end of session. Mention they can edit `docs/agents/*.md` directly later — re-running this skill is only necessary if they want to switch issue trackers, restart from scratch, or reconfigure the ADR wiki.
+Tell the user the setup is complete, which engineering skills will now read from these files, and that ADR changes are pushed to the forge wiki at end of session. Mention they can edit `docs/agents/*.md` directly later — re-running this skill is only necessary if they want to switch issue trackers, restart from scratch, or reconfigure the ADR wiki or agent CLI.
