@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: research-engineering
 description: Route DSP hardware and software research-engineering requests to the best specialist workflow and return a unified, decision-ready output
 ---

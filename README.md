@@ -32,7 +32,7 @@ A collection of agent skills (slash commands and behaviors) loaded into Steve Be
 - [resolving-merge-conflicts](common/engineering/resolving-merge-conflicts/SKILL.md) — Resolve an in-progress git merge/rebase conflict.
 - [tdd](common/engineering/tdd/SKILL.md) — Test-driven development.
 
-**Deprecated / model-invoked:**
+**Deprecated / user-invoked:**
 - [audio-product-dsp](common/deprecated/audio-production-dispatcher/SKILL.md) — Dispatch audio product DSP hardware/software engineering requests to the best specialist workflow with measurable product-focused outputs.
 - [dsp-research-engineering](common/deprecated/dsp-research-dispatcher/SKILL.md) — Route DSP hardware and software research-engineering requests to the best specialist workflow and return a unified, decision-ready output.
 - [forge-gitea](common/deprecated/forge-gitea/SKILL.md) — Work with Gitea repositories, issues, pull requests, releases, and CI.

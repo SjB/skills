@@ -13,11 +13,10 @@ The issue tracker conventions live in [`docs/agents/issue-tracker.md`](../../../
 ## Invocation
 
 ```
-/skill:implement-issue <N> [--agent <name>] [--base <branch>] [--force]
+/skill:implement-issue <N> [--base <branch>] [--force]
 ```
 
 - `<N>` — required, the issue number
-- `--agent <name>` — **DEPRECATED**: this argument is ignored. The agent CLI is read from `docs/agents/agent-cli.md`, which is set up by `/setup-skills` Section E. Rerun `/setup-skills` to change the agent.
 - `--base <branch>` — optional, target base branch (default: repo default branch).
 - `--force` — optional, allow overwriting an existing worktree.
 
@@ -119,7 +118,7 @@ Stop.
 
 #### 2a. Label the issue `in-progress`
 
-Apply the `in-progress` triage label.
+Change the issue triage labels to `in-progress`
 
 #### 2b. Create the worktree
 
@@ -131,7 +130,7 @@ git worktree add -b <branch-name> ../<repo-name>-issue-<N> <base>
 
 Assemble a single prompt that the child agent will receive. Include:
 
-- **Issue body** — the full markdown body from `tea issue <N> -o json`
+- **Issue body** — the full markdown body of the issue.
 - **Comments** — all comments, if any
 - **Standing instruction**: "Implement using TDD: write a failing test first, make it pass, refactor. Explore the codebase before writing code. Respect ADRs and the project domain glossary. Set up the project (install dependencies, build) before starting. The issue body may contain Implementation Decisions and Testing Decisions sections — treat these as constraints."
 - **Context**: "Base branch: `<base>`. Target your PR at `<base>`. Branch name: `<branch-name>`."
@@ -143,9 +142,10 @@ Assemble a single prompt that the child agent will receive. Include:
   5. Commit with conventional commits (`feat:` for enhancement, `fix:` for bug) referencing `(#<N>)`
   6. Push the branch: `git push origin <branch-name>`
   7. Create a PR with: link to the issue, one-sentence summary, short key-changes list
-  8. Comment on the issue with the PR link: `tea comment <N> "PR opened: <url>"`
-  9. Change the issue label to `needs-review`: `tea issues edit <N> --add-labels "needs-review" --remove-labels "in-progress"`
-  10. Print `DONE — issue #<N>`
+  8. Comment on the issue with the PR link: `"PR opened: <url>"`
+  9. Change the issue triage label to `needs-review`
+  10. remove the prompt file from `/tmp` (the child may have already read it)
+  11. Print `DONE — issue #<N>`
 - **Failure instruction**: "If any step fails, report where you stopped and what remains for manual recovery. Print the exact commands needed."
 
 Write the full prompt to a temp file:
@@ -170,46 +170,49 @@ If available, use `mise x --allow-env='*' --` as the runner prefix. Otherwise, f
 
 #### 4b. Compose the agent command
 
-Substitute `@{prompt}` in the configured `args` with the absolute path to the temp prompt file:
+Substitute `{prompt}` in the configured `args` with the absolute path to the temp prompt file. The prompt file path is `/tmp/issue-<N>-prompt.md`:
 
-- If `args` is non-empty: the agent command is `<binary> <substituted-args>`
-- If `args` is empty (stdin-piping agents): the agent command is `cat <prompt-file> | <binary>`
+```bash
+prompt_file="/tmp/issue-<N>-prompt.md"
+substituted_args="${args//\{prompt\}/$prompt_file}"
+```
+
+- If `args` was non-empty: the agent command is `<binary> $substituted_args`
+- If `args` was empty (stdin-piping agents): the agent command is `cat $prompt_file | <binary>`
 
 #### 4c. Compose the full tmux command
 
+Use `$substituted_args` from step 4b:
+
 ```bash
-tmux new-window -n "issue-<N>-<repo-slug>" -c <absolute-worktree-path> "<runner-prefix> <agent-command>"
+tmux new-window -n "issue-<N>-<repo-slug>" -c <absolute-worktree-path> "<runner-prefix> <binary> $substituted_args"
 ```
 
 **With mise:**
 ```bash
-tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "mise x --allow-env='*' -- <binary> <args-with-prompt-subbed>"
+tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "mise x --allow-env='*' -- $binary $substituted_args"
 ```
 
 **Without mise (fallback):**
 ```bash
-tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "$SHELL -c '<binary> <args-with-prompt-subbed>'"
+tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "$SHELL -c '$binary $substituted_args'"
 ```
 
-For stdin-piping agents (empty args), wrap the pipe command:
+For stdin-piping agents (empty args), use the pipe form:
 
 **With mise:**
 ```bash
-tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "mise x --allow-env='*' -- sh -c 'cat <prompt-file> | <binary>'"
+tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "mise x --allow-env='*' -- sh -c 'cat $prompt_file | $binary'"
 ```
 
 **Without mise:**
 ```bash
-tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "$SHELL -c 'cat <prompt-file> | <binary>'"
+tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "$SHELL -c 'cat $prompt_file | $binary'"
 ```
 
 The window stays open after the child completes so the user can review the output.
 
-After tmux launches, clean up the temp file:
-
-```bash
-rm /tmp/issue-<N>-prompt.md
-```
+Do not remove the prompt file immediately — the child agent may not have read it yet. The file will be read from `/tmp` and cleaned up by the OS or the child after use.
 
 ### 5. Print summary
 
