@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: audio-product-dsp
 description: Dispatch audio product DSP hardware/software engineering requests to the best specialist workflow with measurable product-focused outputs
 ---
