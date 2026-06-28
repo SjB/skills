@@ -61,7 +61,7 @@ fd --type f "Index" "path/to/obsidian-vault"
 
 ## Operating Rules
 
-- Prefer reorganization over curation.
+- Prefer curation over reorganization.
 - Do not move, rename, or delete many notes at once unless the user asks.
 - Do not invent links based only on shared words.
 - Preserve the user's voice unless the user asks for a rewrite.
@@ -71,10 +71,7 @@ fd --type f "Index" "path/to/obsidian-vault"
   step-by-step instructions verbatim. Do not summarize or condense them.
 - For reference/source notes: add a brief overview at the top, but keep the
   original commands and details intact below. Completeness > brevity.
-- Read every file completely before editing. Do not rely on head/tail,
-  heading-only scans, or partial reads to judge a file's content.
-- For any file you plan to move, rename, or modify, run `cat` on the full file
-  first. Only then decide what stays, what moves, and what changes.
+- Read every file completely before moving, renaming, or modifying it. Do not rely on head/tail, heading-only scans, or partial reads to judge a file's content.
 
 ## Note-Type Heuristics
 
