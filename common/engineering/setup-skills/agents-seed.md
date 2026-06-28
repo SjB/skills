@@ -9,7 +9,7 @@ agents:
   - name: pi
     binary: pi
     args: "@{prompt}"
-    description: "My primary agent harness. Accepts prompt file via @{prompt}."
+    description: "My primary agent harness. Accepts prompt file via {prompt}."
 
   - name: opencode
     binary: opencode
@@ -26,7 +26,7 @@ agents:
   - name: codex
     binary: codex
     args: "@{prompt}"
-    description: "OpenAI Codex. Accepts prompt file via @{prompt}."
+    description: "OpenAI Codex. Accepts prompt file via {prompt}."
 
   - name: claude
     binary: claude
@@ -41,6 +41,6 @@ agents:
 |-------|-------------|
 | `name` | Display name used in menus and `--agent` flag |
 | `binary` | Command name expected on PATH |
-| `args` | Static arguments appended after the binary. May include `@{prompt}` which is substituted at invocation time with the absolute path to the prompt file. Empty string means stdin piping (prompt is piped via `cat`). |
+| `args` | Static arguments appended after the binary. May include `{prompt}` which is substituted at invocation time with the absolute path to the prompt file. Empty string means stdin piping (prompt is piped via `cat`). |
 | `description` | Short human-readable description for the setup menu |
 | `note` | Optional additional context |
