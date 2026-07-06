@@ -18,7 +18,7 @@ disable-model-invocation: true
 
 #### a. Label the issue `in-progress`
 
-Change the issue triage labels to `in-progress`.
+Change the issue triage label to `in-progress`.
 
 Completion criterion: The issue label is confirmed as `in-progress`.
 

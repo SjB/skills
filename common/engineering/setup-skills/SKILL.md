@@ -60,7 +60,7 @@ Default: each role's string equals its name. Ask the user if they want to overri
 
 **Section C — Domain docs.**
 
-> Explainer: Some skills (`improve-codebase-architecture`, `diagnosing-bugs`, `tdd`) read a `CONTEXT.md` file to learn the project's domain languagee, and `adr` for past architectural decisions. They need to know whether the repo has one global context or multiple (e.g. a monorepo with separate frontend/backend contexts) so they look in the right place.
+> Explainer: Some skills (`improve-codebase-architecture`, `diagnosing-bugs`, `tdd`) read a `CONTEXT.md` file to learn the project's domain language, and `adr` for past architectural decisions. They need to know whether the repo has one global context or multiple (e.g. a monorepo with separate frontend/backend contexts) so they look in the right place.
 
 Confirm the layout:
 
@@ -94,7 +94,7 @@ Record the answers in `docs/agents/adr-wiki.md`.
 Show the user a draft of:
 
 - The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
-- The contents of `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/domain.md`, `docs/agents/adr-wiki.md`, and `docs/agents/agent-cli.md`
+- The contents of `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/domain.md`, and `docs/agents/adr-wiki.md`
 
 Let them edit before writing.
 
@@ -131,10 +131,6 @@ The block:
 
 [one-line summary — forge, wiki URL, auth method]. See `docs/agents/adr-wiki.md`.
 
-### Agent CLI
-
-[one-line summary of the configured CLI agent]. See `docs/agents/agent-cli.md`.
-
  ## Project Context Pack
 
 [Agent memory file that describes the repo's context, codebase, and navigation rules]. See `.agents/project-context.md`.
@@ -149,7 +145,6 @@ Then write the docs files:
 - [triage-labels.md](./triage-labels.md) — label mapping
 - [domain.md](./domain.md) — domain doc consumer rules + layout
 - [adr-wiki.md](./adr-wiki.md) — ADR wiki clone and push workflow
-- `docs/agents/agent-cli.md` — agent CLI config with `selected`, `binary`, and `args` fields
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 
