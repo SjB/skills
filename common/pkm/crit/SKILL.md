@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 ## Purpose
 
-This skill implements the CRIT (Context-Request-Input-Tone) framework for structured brainstorming and idea evaluation. It transforms abstract discussions into concrete, actionable outcomes through systematic analysis and iterative refinement.
+This skill implements the CRIT (Context-Request-Ideation-Tone) framework for structured brainstorming and idea evaluation.
 
 ## Core Workflow
 
@@ -23,7 +23,7 @@ Before generating ideas, establish the foundation:
    - What has been tried before (if applicable)?
    - What resources are available?
 
-**Completion Criterion**: Clear understanding of domain, constraints, and current state documented.
+**Completion Criterion**: Domain, constraints, and current state captured in a compact summary (3-5 sentences).
 
 ### Step 2: Request Clarification
 Structure the brainstorming request:
@@ -38,9 +38,9 @@ Structure the brainstorming request:
    - What assumptions should be validated?
    - What data or resources are required?
 
-**Completion Criterion**: Specific goal and input requirements clearly defined.
+**Completion Criterion**: Goal and input requirements captured as 1-3 concrete statements, each with a checkable success criterion.
 
-### Step 3: Idea Generation
+### Step 3: Ideation
 Generate diverse, high-quality ideas:
 
 1. **Divergent Thinking Phase**
@@ -86,34 +86,5 @@ Adapt communication to the audience:
    - Include examples or analogies for clarity
    - Suggest next steps and follow-up questions
 
-**Completion Criterion**: Response delivered in appropriate tone with clear structure.
-
-## Quality Guardrails
-
-- Never generate ideas without clear context and goals
-- Always evaluate ideas against defined success criteria
-- Maintain transparency about assumptions and limitations
-- Encourage iteration and collaboration throughout the process
-- Ensure all recommendations are practical and actionable
-
-## Trigger Hints
-
-Load this skill when the user asks to:
-- Generate ideas for a specific problem or opportunity
-- Brainstorm solutions with structured evaluation
-- Get expert guidance through systematic analysis
-- Develop actionable plans from abstract concepts
-- Evaluate multiple approaches to a challenge
-
-## Output Format
-
-Return results in this structure:
-
-1. **Context Analysis**: Documented understanding of domain and constraints
-2. **Request Clarification**: Defined goals and input requirements
-3. **Idea Generation**: List of ideas with evaluation scores
-4. **Refined Solutions**: Detailed action plans for top candidates
-5. **Next Steps**: Suggested follow-up actions and questions
-
-Each section should be clearly labeled and include completion criteria verification.
+**Completion Criterion**: Response delivered in chosen role with sections clearly labeled (Context, Request, Ideation, Refinement, Next Steps).
 

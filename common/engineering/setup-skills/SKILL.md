@@ -12,7 +12,6 @@ Scaffold the per-repo configuration that the engineering skills assume:
 - Triage labels: the strings used for the canonical triage roles, labels are defined in `triage-labels.md`
 - Domain docs: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
 - **ADR wiki** — where ADRs are stored (forge wiki, cloned into `docs/adr/`), and the clone/push workflow
-- **Agent CLI** — which CLI agent to use for child agents in `/implement-issue`
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
@@ -90,37 +89,6 @@ After the forge is confirmed, present the workflow and confirm:
 
 Record the answers in `docs/agents/adr-wiki.md`.
 
-**Section E — Agent CLI.**
-
-> Explainer: The `implement-issue` skill dispatches a child agent in an isolated git worktree. It needs to know which CLI agent to spawn (pi, opencode, goose, codex, or claude) and how to invoke it. This configuration lives in `docs/agents/agent-cli.md` and is set up once per repo so every developer uses the same agent by default.
-
-Read `agents-seed.md` from this skill directory to get the list of known agents. Present them as a numbered menu:
-
-```
-Available agents:
-1. pi       — My primary agent harness. Accepts prompt file via -p flag.
-2. opencode — OpenCode agent. Accepts prompt file via -f flag.
-3. goose    — Goose agent. Accepts prompt file via -i flag.
-4. codex    — OpenAI Codex. Pipes stdin via cat.
-5. claude   — Anthropic Claude CLI. Pipes stdin via cat.
-```
-
-Ask the user to type the agent name (or number):
-
-> Which CLI agent should `/implement-issue` use for child agents? (default: pi)
-
-Validate the selected agent's binary is on PATH:
-
-```bash
-command -v <selected-binary>
-```
-
-If the binary is not found, tell the user:
-
-> Binary '<binary>' not found on PATH. Please install it or choose a different agent.
-
-Loop until a valid binary is found or the user quits.
-
 ### 3. Confirm and edit
 
 Show the user a draft of:
@@ -182,14 +150,6 @@ Then write the docs files:
 - [domain.md](./domain.md) — domain doc consumer rules + layout
 - [adr-wiki.md](./adr-wiki.md) — ADR wiki clone and push workflow
 - `docs/agents/agent-cli.md` — agent CLI config with `selected`, `binary`, and `args` fields
-
-For Section E, write `docs/agents/agent-cli.md` with the selected agent:
-
-```yaml
-selected: <agent-name>
-binary: <binary-name>
-args: "<args-from-seed>"
-```
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 

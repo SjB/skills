@@ -1,6 +1,6 @@
 ---
 name: pkm-curation
-description: Curate an Obsidian-style personal knowledge vault by classifying notes, normalizing frontmatter, improving structure, extracting atomic notes, and adding meaningful wikilinks. 
+description: Curate an Obsidian vault — classify notes, normalize frontmatter, add wikilinks, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick. 
 ---
 
 # PKM Curation
@@ -9,11 +9,10 @@ Use this skill when working inside a Markdown-first vault that values curation o
 
 ## Goals
 
-- Turn raw notes into clear, reusable notes.
+- Turn raw notes into reusable atomic notes.
 - Keep new notes consistent with vault conventions.
-- Strengthen the link graph with meaningful `[[wikilinks]]`  syntax `[[Note Title]]`.
+- Strengthen the link graph with meaningful `[[wikilinks]]`.
 - Extract atomic notes from long or mixed-topic notes.
-- Avoid unnecessary reorganization and weak links.
 
 ## Read This First
 
@@ -23,9 +22,7 @@ Use this skill when working inside a Markdown-first vault that values curation o
 - Keep changes small and reviewable.
 - Keep file operations local to the vault unless the user explicitly asks otherwise.
 
-## Workflows
-
-## Search for notes
+## Search
 
 ```bash
 # Search by filename
@@ -33,33 +30,15 @@ fd --type f ".md" "path/to/obsidian-vault" | rg -i "keyword"
 
 # Search by content
 rg -l "keyword" "path/to/obsidian-vault" --include "*.md"
-```
 
-## Curate existing note
-1. Inspect the target note or note set.
-2. Identify the note type: inbox, source, atomic, project, daily, or reference.
-3. Normalize frontmatter and basic structure.
-4. Clarify the title if the current one is vague or timestamp-like.
-5. Summarize or distill the note if it mixes too many ideas.
-6. Add or suggest meaningful `[[wikilinks]]` to related notes.
-7. If a note contains multiple durable ideas, extract 1-3 atomic notes.
-8. Suggest moving the note only if the destination is clearly better.
-
-## Find related notes
-
-Search for `[[Note Title]]` across the vault to find backlinks:
-
-```bash
+# Find backlinks to a note
 rg -l "\\[\\[Note Title\\]\\]" "path/to/obsidian-vault" --include "*.md"
-```
 
-### Find index notes
-
-```bash
+# Find index notes
 fd --type f "Index" "path/to/obsidian-vault"
 ```
 
-## Operating Rules
+## Rules
 
 - Prefer curation over reorganization.
 - Do not move, rename, or delete many notes at once unless the user asks.
@@ -149,16 +128,17 @@ Keep extracted notes short. One note, one idea.
 
 ### Curate one note
 
-- inspect the note
-- identify note type
-- normalize frontmatter
-- tighten headings and summary
-- add a few strong links
-- suggest extracted atomic notes if warranted
-- locate the target file in the vault
-- inspect nearby related notes before adding links
-- patch the note in place
-- return a short summary of edits and suggested follow-up notes
+1. Inspect the target note and locate its file in the vault.
+2. Identify the note type: inbox, source, atomic, project, daily, or reference.
+3. Normalize frontmatter and basic structure.
+4. Clarify the title if vague or timestamp-like.
+5. Tighten headings and summary; distill if it mixes too many ideas.
+6. Inspect nearby related notes, then add a few strong `[[wikilinks]]`.
+7. If the note contains multiple durable ideas, extract 1-3 atomic notes.
+8. Suggest moving only if the destination is clearly better.
+9. Patch the note in place and return a short summary of edits.
+
+**Completion Criterion**: Note inspected, classified, normalized, linked, and patched, with a summary returned to the user.
 
 ### Curate an inbox batch
 
@@ -171,6 +151,8 @@ Keep extracted notes short. One note, one idea.
 - process them one at a time
 - stop and summarize after each batch
 
+**Completion Criterion**: Each note in the batch classified and normalized, with a summary returned after the batch.
+
 ### Review recent notes
 
 - inspect recently edited notes
@@ -180,6 +162,8 @@ Keep extracted notes short. One note, one idea.
 - search by recent filenames or recent folders when file metadata is available
 - keep edits conservative and return a review summary
 
+**Completion Criterion**: Recently edited notes inspected, missing links and mixed concerns flagged, with a review summary returned.
+
 ### Serendipity review
 
 - choose a note from the vault
@@ -188,6 +172,8 @@ Keep extracted notes short. One note, one idea.
 - suggest only high-confidence connections
 - pick one note from a user-specified folder or from curated folders only
 - avoid randomizing across obviously raw capture unless the user asks for that
+
+**Completion Criterion**: One curated note chosen, briefly summarized, compared to active topic, with only high-confidence connections suggested.
 
 ## Output Style
 

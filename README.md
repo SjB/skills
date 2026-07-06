@@ -12,7 +12,7 @@ A collection of agent skills (slash commands and behaviors) loaded into Steve Be
 - [implement-issue](common/engineering/implement-issue/SKILL.md) — Dispatch a child agent in an isolated git worktree to implement a ready-for-agent issue end-to-end.
 - [improve-codebase-architecture](common/engineering/improve-codebase-architecture/SKILL.md) — Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
 - [knowledge-gardener](common/pkm/knowledge-gardener/SKILL.md) — Run vault-aware semantic search, synthesis, note creation, linking, and Zettelkasten workflows for this Obsidian vault.
-- [pkm-curation](common/pkm/pkm-curation/SKILL.md) — Curate an Obsidian-style personal knowledge vault by classifying notes, normalizing frontmatter, improving structure, extracting atomic notes, and adding meaningful wikilinks.
+- [pkm-curation](common/pkm/pkm-curation/SKILL.md) — Curate an Obsidian vault — classify notes, normalize frontmatter, add wikilinks, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick.
 - [project-context-pack](common/engineering/project-context-pack/SKILL.md) — Build and refresh a bounded repo context memory file so agents use disciplined search instead of repeated browsing.
 - [research-vault](common/pkm/research-vault/SKILL.md) — Research a topic through a one-question-at-a-time learning conversation, answer directly, share resources when useful, and save a linked Obsidian research packet.
 - [setup-skills](common/engineering/setup-skills/SKILL.md) — Configure this repo for the engineering skills, set up its issue tracker, triage label vocabulary, and domain doc layout.

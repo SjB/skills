@@ -1,0 +1,353 @@
+#!/usr/bin/env bash
+#
+# detect-agent — Detect which AI agent CLI launched this script.
+#
+# Checks environment variables and walks the parent process tree to
+# identify the originating coding agent.  Designed for agent-agnostic
+# tools (skills, scripts, hooks) that need to adjust behaviour based
+# on which agent invoked them.
+#
+# Usage:
+#   detect-agent                # print name  (e.g. "pi", "opencode")
+#   detect-agent --name         # same as default
+#   detect-agent --json         # JSON: {"agent":"pi","detected":true}
+#   detect-agent --verbose      # human-readable with debug info
+#   detect-agent --list-agents  # list all known agent names
+#
+# Exit codes:
+#   0  agent detected
+#   1  unknown / not detected
+#
+# Supported agents (add your own at the top of each definition map):
+#   pi, opencode, aider, claude, codex, cursor, windsurf, continue,
+#   github-copilot, goose
+#
+# Detection order:
+#   1. Environment variable signatures (most reliable)
+#   2. Walk parent process tree skipping shells
+#   3. Check /proc/$PPID/{comm,cmdline} as fallback
+#
+
+set -euo pipefail
+
+########################################################################
+# Agent definitions
+########################################################################
+
+# Each entry: "<env-var>:<match-value>:<agent-name>"
+# If match-value is "*", any non-empty value matches.
+# If match-value is a literal, the env var must equal it.
+AGENT_ENV_SIGS=(
+  "PI_CODING_AGENT:true:pi"
+  "OPENCODE_CONFIG:*:opencode"
+  "OPENCODE_CONFIG_DIR:*:opencode"
+  "OPENCODE_API_KEY:*:opencode"
+  "CLAUDE_CODE_AGENT_RULE_DISABLED:*:claude"
+  "CLAUDE_CODE_SSE_PORT:*:claude"
+  "AIDER_DARK_MODE:*:aider"
+  "CODEX_API_KEY:*:codex"
+  "CURSOR_AGENT_RULE_DISABLED:*:cursor"
+  "WINDSURF_AGENT_RULE_DISABLED:*:windsurf"
+  "CONTINUE_ON_ERROR:*:continue"
+)
+
+# Key = /proc/PID/comm (truncated to 15 chars on Linux).
+# Value = canonical agent name.
+declare -A AGENT_COMM
+AGENT_COMM=(
+  [pi]="pi"
+  [opencode]="opencode"
+  [aider]="aider"
+  [claude]="claude"
+  [codex]="codex"
+  [cursor]="cursor"
+  [windsurf]="windsurf"
+  [continue]="continue"
+  [github-copilot]="github-copilot"
+  [copilot]="github-copilot"
+  [goose]="goose"
+)
+
+# For agents running under an interpreter (node, python, etc.).
+# Key = substring to search in cmdline, Value = agent name.
+declare -A AGENT_CMDLINE
+AGENT_CMDLINE=(
+  ["opencode"]="opencode"
+  ["/pi "]="pi"
+  ["/aider"]="aider"
+  ["/claude"]="claude"
+  ["/codex"]="codex"
+  ["cursor"]="cursor"
+  ["windsurf"]="windsurf"
+  ["continue.dev"]="continue"
+  ["github-copilot"]="github-copilot"
+  ["goose"]="goose"
+)
+
+# Shells to skip when walking ancestors.
+SHELL_COMMS=(
+  bash zsh fish sh dash ksh mksh posh ash tcsh csh
+  tmux:server tmux screen
+  sudo doas
+)
+
+SHELL_CMDLINE_SUBSTRINGS=(
+  "/bash" "/zsh" "/fish" "/sh" "/dash" "/ksh"
+)
+
+########################################################################
+# Helpers
+########################################################################
+
+comm_of() {
+  local pid="$1"
+  cat "/proc/${pid}/comm" 2>/dev/null || true
+}
+
+cmdline_of() {
+  local pid="$1"
+  tr '\0' ' ' <"/proc/${pid}/cmdline" 2>/dev/null || true
+}
+
+is_shell() {
+  local pid="$1"
+  local c; c="$(comm_of "$pid")" || true
+  [[ -z "$c" ]] && return 1
+
+  for s in "${SHELL_COMMS[@]}"; do
+    [[ "$c" == "$s" ]] && return 0
+  done
+
+  local cl; cl="$(cmdline_of "$pid")" || true
+  for s in "${SHELL_CMDLINE_SUBSTRINGS[@]}"; do
+    [[ "$cl" == *"$s"* ]] && return 0
+  done
+
+  return 1
+}
+
+walk_to_agent_comm() {
+  local pid="$1"
+  local c
+  while [[ "$pid" -gt 1 ]]; do
+    c="$(comm_of "$pid")" || true
+    [[ -z "$c" ]] && break
+    if ! is_shell "$pid"; then
+      echo "$c"
+      return 0
+    fi
+    pid="$(awk '/^PPid:/{print $2}' "/proc/${pid}/status" 2>/dev/null || true)"
+    [[ -z "$pid" ]] && break
+  done
+  return 1
+}
+
+walk_to_agent_cmdline() {
+  local pid="$1"
+  local cl
+  while [[ "$pid" -gt 1 ]]; do
+    if ! is_shell "$pid"; then
+      cl="$(cmdline_of "$pid")" || true
+      if [[ -n "$cl" ]]; then
+        echo "$cl"
+        return 0
+      fi
+    fi
+    pid="$(awk '/^PPid:/{print $2}' "/proc/${pid}/status" 2>/dev/null || true)"
+    [[ -z "$pid" ]] && break
+  done
+  return 1
+}
+
+check_env_sigs() {
+  local var val agent
+  for sig in "${AGENT_ENV_SIGS[@]}"; do
+    IFS=':' read -r var val agent <<< "$sig"
+    if [[ "$val" == "*" ]]; then
+      if [[ -n "${!var:-}" ]]; then
+        echo "$agent"
+        return 0
+      fi
+    else
+      if [[ "${!var:-}" == "$val" ]]; then
+        echo "$agent"
+        return 0
+      fi
+    fi
+  done
+  return 1
+}
+
+match_cmdline() {
+  local cl="$1"
+  local needle agent
+  for needle in "${!AGENT_CMDLINE[@]}"; do
+    agent="${AGENT_CMDLINE[$needle]}"
+    if [[ "$cl" == *"$needle"* ]]; then
+      echo "$agent"
+      return 0
+    fi
+  done
+  return 1
+}
+
+match_comm() {
+  local c="$1"
+  local comm_name
+  for comm_name in "${!AGENT_COMM[@]}"; do
+    if [[ "$c" == "$comm_name" ]]; then
+      echo "${AGENT_COMM[$comm_name]}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+########################################################################
+# Main detection logic
+########################################################################
+
+detect() {
+  local agent=""
+
+  # Phase 1 — environment variables (most reliable)
+  agent="$(check_env_sigs)" || true
+  [[ -n "$agent" ]] && echo "$agent" && return 0
+
+  # Phase 2 — walk ancestors, check comm
+  local ancestor_comm
+  ancestor_comm="$(walk_to_agent_comm "$PPID")" || true
+  if [[ -n "$ancestor_comm" ]]; then
+    agent="$(match_comm "$ancestor_comm")" || true
+    [[ -n "$agent" ]] && echo "$agent" && return 0
+
+    # comm matched but not in our map; try its cmdline
+    local ancestor_pid="$PPID"
+    while [[ "$ancestor_pid" -gt 1 ]]; do
+      local ac; ac="$(comm_of "$ancestor_pid")" || true
+      if [[ "$ac" == "$ancestor_comm" ]]; then
+        local ancestor_cl
+        ancestor_cl="$(cmdline_of "$ancestor_pid")" || true
+        if [[ -n "$ancestor_cl" ]]; then
+          agent="$(match_cmdline "$ancestor_cl")" || true
+          [[ -n "$agent" ]] && echo "$agent" && return 0
+        fi
+        break
+      fi
+      ancestor_pid="$(awk '/^PPid:/{print $2}' "/proc/${ancestor_pid}/status" 2>/dev/null || true)"
+    done
+  fi
+
+  # Phase 3 — walk ancestors, check cmdline (catches node-based agents)
+  local ancestor_cl
+  ancestor_cl="$(walk_to_agent_cmdline "$PPID")" || true
+  if [[ -n "$ancestor_cl" ]]; then
+    agent="$(match_cmdline "$ancestor_cl")" || true
+    [[ -n "$agent" ]] && echo "$agent" && return 0
+  fi
+
+  # Phase 4 — fallback: check immediate PPID directly
+  local ppid_comm; ppid_comm="$(comm_of "$PPID")" || true
+  agent="$(match_comm "$ppid_comm")" || true
+  [[ -n "$agent" ]] && echo "$agent" && return 0
+
+  local ppid_cl; ppid_cl="$(cmdline_of "$PPID")" || true
+  agent="$(match_cmdline "$ppid_cl")" || true
+  [[ -n "$agent" ]] && echo "$agent" && return 0
+
+  return 1
+}
+
+########################################################################
+# Output
+########################################################################
+
+mode="${1:---name}"
+
+case "$mode" in
+  --list-agents)
+    echo "Known agents (by env-var / process-name):"
+    echo ""
+    echo "Environment variable signatures:"
+    for sig in "${AGENT_ENV_SIGS[@]}"; do
+      IFS=':' read -r var val agent <<< "$sig"
+      printf "  %-12s  %-8s  %s=%s\n" "$agent" "(env)" "$var" "$val"
+    done
+    echo ""
+    echo "Process comm signatures:"
+    for comm_name in "${!AGENT_COMM[@]}"; do
+      printf "  %-12s  %-8s  %s\n" "${AGENT_COMM[$comm_name]}" "(comm)" "$comm_name"
+    done
+    echo ""
+    echo "Cmdline substring signatures:"
+    for needle in "${!AGENT_CMDLINE[@]}"; do
+      printf "  %-12s  %-8s  *%s*\n" "${AGENT_CMDLINE[$needle]}" "(cmdline)" "$needle"
+    done
+    ;;
+
+  --json)
+    agent="$(detect)" || agent="null"
+    if [[ "$agent" != "null" ]]; then
+      printf '{"agent":"%s","detected":true}\n' "$agent"
+    else
+      printf '{"agent":null,"detected":false}\n'
+      exit 1
+    fi
+    ;;
+
+  --verbose)
+    echo "=== Agent Detection ==="
+    agent="$(detect)" || true
+    if [[ -n "$agent" ]]; then
+      echo "Detected agent: $agent"
+    else
+      echo "Detected agent: (unknown)"
+    fi
+    echo ""
+
+    echo "Relevant environment variables:"
+    for sig in "${AGENT_ENV_SIGS[@]}"; do
+      IFS=':' read -r var val _ <<< "$sig"
+      # Skip entries that aren't real variable names (e.g. patterns with *).
+      [[ "$var" == *\** ]] && continue
+      if [[ -n "${!var:-}" ]]; then
+        echo "  $var=${!var}"
+      fi
+    done
+    [[ -z "${PI_CODING_AGENT:-}" ]] && echo "  PI_CODING_AGENT=<unset>"
+    echo ""
+
+    echo "Process tree (up from PPID=$PPID):"
+    _dbg_pid="$PPID"
+    _dbg_depth=0
+    while [[ "$_dbg_pid" -gt 1 && "$_dbg_depth" -lt 15 ]]; do
+      _dbg_c="$(comm_of "$_dbg_pid")" || true
+      _dbg_cl="$(cmdline_of "$_dbg_pid")" || true
+      if [[ -n "$_dbg_c" ]]; then
+        printf "  [%d] %s" "$_dbg_depth" "$_dbg_c"
+        if [[ -n "$_dbg_cl" ]]; then
+          printf "  <- %s" "${_dbg_cl:0:100}"
+        fi
+        if [[ -n "$agent" ]]; then
+          _dbg_mc="$(match_comm "$_dbg_c")" || true
+          if [[ "$_dbg_mc" == "$agent" ]]; then
+            printf "  <-- DETECTED"
+          fi
+        fi
+        echo ""
+      fi
+      _dbg_pid="$(awk '/^PPid:/{print $2}' "/proc/${_dbg_pid}/status" 2>/dev/null || true)"
+      _dbg_depth=$((_dbg_depth + 1))
+    done
+    ;;
+
+  --name|*)
+    agent="$(detect)" || agent=""
+    if [[ -n "$agent" ]]; then
+      echo "$agent"
+    else
+      echo "unknown"
+      exit 1
+    fi
+    ;;
+esac

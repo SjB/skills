@@ -1,6 +1,4 @@
-# Agent CLI Seed Data
-
-This file is the source of truth for all supported CLI agents. It is read by `setup-skills` Section E to present the menu and by `implement-issue` for agent dispatch.
+# TMUX Launch Agent — Agent CLI Seed Data
 
 ## Agents
 

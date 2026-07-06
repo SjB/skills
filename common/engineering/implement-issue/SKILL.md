@@ -1,227 +1,75 @@
 ---
 name: implement-issue
-description: Dispatch a child agent in an isolated git worktree to implement a `ready-for-agent` issue end-to-end.
+description: "Dispatch a child agent in an isolated git worktree to implement a piece of work based on a PRD or set of issues."
 disable-model-invocation: true
 ---
 
-# Implement Issue
-
-Dispatch a child agent in an isolated git worktree to implement a `ready-for-agent` issue end-to-end — explore, implement with TDD, run the full quality gate, push a branch, create a PR, comment on the issue, and update labels.
-
-The issue tracker conventions live in [`docs/agents/issue-tracker.md`](../../../docs/agents/issue-tracker.md) and the triage label vocabulary in [`docs/agents/triage-labels.md`](../../../docs/agents/triage-labels.md). Both should have been provided to you already.
-
 ## Invocation
 
-```
 /skill:implement-issue <N> [--base <branch>] [--force]
-```
 
 - `<N>` — required, the issue number
-- `--base <branch>` — optional, target base branch (default: repo default branch).
-- `--force` — optional, allow overwriting an existing worktree.
-
-## Agent CLI Configuration
-
-The CLI agent for child agents is configured in `docs/agents/agent-cli.md`. This file is written by `/setup-skills` Section E and contains:
-
-```yaml
-selected: <agent-name>
-binary: <binary-name>
-args: "<arguments including @{prompt}>"
-```
-
-Supported agents and their configurations are defined in `agents-seed.md` in the setup-skills skill directory.
+- `--base <branch>` — optional, target base branch (default: repo default branch)
+- `--force` — optional, allow overwriting an existing worktree
 
 ## Process
 
-### 1. Pre-flight checks
+### 1. Setup
 
-Stop on any failure and report clearly what needs fixing. Do not proceed.
+#### a. Label the issue `in-progress`
 
-#### 1b. Issue exists and is open
+Change the issue triage labels to `in-progress`.
 
-If the issue is not found or state is not `open`, report and stop.
+Completion criterion: The issue label is confirmed as `in-progress`.
 
-#### 1c. Issue is labeled `ready-for-agent`
-
-Check that the issue's labels include `ready-for-agent`. If not, report the current state and point the user to `/triage`. Stop.
-
-#### 1d. No open blockers
-
-Read the issue body for "Blocked by #M" references. For each referenced issue, check whether it is open:
-
-If any blocker is open, report the blocking issues and stop.
-
-#### 1e. Remote exists and base branch is reachable
-
-Default base is the repo's default branch — infer from `git ls-remote --heads origin` (look for `main` or `master`). Allow an explicit `--base <branch>` override.
-
-```bash
-git ls-remote --heads origin <base>
-```
-
-If the remote is unreachable or the base branch doesn't exist, report and stop.
-
-#### 1f. Branch name is free
-
-Derive the branch name from the issue title:
-
-- Format: `issue-<N>-<slug>`
-- Slug: lowercase the title, strip to `[a-z0-9-]`, truncate to ~4–5 short words (max ~50 chars), collapse double hyphens
-- If the title yields no usable slug, fall back to `issue-<N>`
-
-Check that the branch doesn't already exist on the remote:
-
-```bash
-git ls-remote --heads origin <branch-name>
-```
-
-If it exists, report and stop. (No auto-suffix, no force-push.)
-
-#### 1g. Worktree path is free
-
-The worktree path is a sibling to the main repo: `../<repo-name>-issue-<N>`. Check that it doesn't already exist:
-
-```bash
-ls -d ../<repo-name>-issue-<N>
-```
-
-If it exists, report and stop. Let the user override with `--force`.
-
-#### 1h. Running inside a tmux session
-
-Confirm `$TMUX` is set. If not, report "This skill requires a tmux session. Start tmux and rerun." and stop.
-
-#### 1i. Read agent CLI config
-
-Read `docs/agents/agent-cli.md` and parse the `selected`, `binary`, and `args` fields. If the file is missing or malformed, report:
-
-> Agent CLI not configured. Run `/setup-skills` Section E to configure the CLI agent for child agents.
-
-Stop.
-
-#### 1j. Validate binary on PATH
-
-Confirm the configured `binary` is on PATH:
-
-```bash
-command -v <binary>
-```
-
-If the binary is not found, fail with:
-
-> Agent '<binary>' not found on PATH — rerun /setup-skills to reconfigure.
-
-Stop.
-
-### 2. Setup
-
-#### 2a. Label the issue `in-progress`
-
-Change the issue triage labels to `in-progress`
-
-#### 2b. Create the worktree
+#### b. Create the worktree
 
 ```bash
 git worktree add -b <branch-name> ../<repo-name>-issue-<N> <base>
 ```
 
-### 3. Compose and write the child prompt
+Completion criterion: The worktree exists at `../<repo-name>-issue-<N>` and the new branch is checked out.
+
+### 2. Compose the child prompt
 
 Assemble a single prompt that the child agent will receive. Include:
 
 - **Issue body** — the full markdown body of the issue.
 - **Comments** — all comments, if any
-- **Standing instruction**: "Implement using TDD: write a failing test first, make it pass, refactor. Explore the codebase before writing code. Respect ADRs and the project domain glossary. Set up the project (install dependencies, build) before starting. The issue body may contain Implementation Decisions and Testing Decisions sections — treat these as constraints."
-- **Context**: "Base branch: `<base>`. Target your PR at `<base>`. Branch name: `<branch-name>`."
-- **Checklist** — a numbered checklist the child should work through:
-  1. Explore the codebase and read the issue body + comments thoroughly
-  2. Install dependencies and build the project
-  3. Implement the change using TDD (red-green-refactor)
-  4. Run the full project quality gate (infer from package.json, Makefile, Cargo.toml, etc.), fix until green
-  5. Commit with conventional commits (`feat:` for enhancement, `fix:` for bug) referencing `(#<N>)`
-  6. Push the branch: `git push origin <branch-name>`
-  7. Create a PR with: link to the issue, one-sentence summary, short key-changes list
-  8. Comment on the issue with the PR link: `"PR opened: <url>"`
-  9. Change the issue triage label to `needs-review`
-  10. remove the prompt file from `/tmp` (the child may have already read it)
-  11. Print `DONE — issue #<N>`
+- **Standing instruction**: "Implement using /tdd where possible, at the pre-agreed seam. Run typechecking regularly, run single test files regularly, and run the full test suite once at the end. Once done, use /code-review to review the work. Commit your work and push the new branch and create a PR with a link to the issue, one-sentence summary, and short key-changes list. Comment on the issue with the PR link: `PR opened: <url>`. Change the issue triage label to needs-review when done."
 - **Failure instruction**: "If any step fails, report where you stopped and what remains for manual recovery. Print the exact commands needed."
 
-Write the full prompt to a temp file:
+(The prompt is passed as arguments to tmux-launch-agent in step 3, which handles writing it to a temp file if needed.)
 
-```bash
-cat > /tmp/issue-<N>-prompt.md <<'PROMPT_EOF'
-<full-composed-prompt>
-PROMPT_EOF
-```
+Completion criterion: The prompt is composed with all required sections (issue body, comments, standing instruction, failure instruction).
 
-### 4. Launch the child
+### 3. Launch the child via tmux-launch-agent
 
-#### 4a. Detect runtime environment
+Use the [`tmux-launch-agent`](../../../../.agents/skills/tmux-launch-agent/SKILL.md) skill to fork the child agent into a new tmux window. Tmux-launch-agent handles agent detection, config lookup, command building (prompt-file or stdin-pipe), mise/SHELL wrapping, and `tmux new-window` creation.
 
-Check if `mise` is available:
+Pass these parameters:
 
-```bash
-command -v mise
-```
+| Parameter | Value |
+|-----------|-------|
+| `--name` | `"issue-<N>-<repo-slug>"` — tmux window title |
+| Remaining args | The full prompt text composed in step 2 |
 
-If available, use `mise x --allow-env='*' --` as the runner prefix. Otherwise, fall back to `$SHELL -c`.
+Ensure the child agent starts in the worktree. If the current pane's working directory is already inside `<absolute-worktree-path>` (from step 1b), tmux-launch-agent's new window inherits it. Otherwise, add `-c <absolute-worktree-path>` to the `tmux new-window` command in tmux-launch-agent's step 6.
 
-#### 4b. Compose the agent command
-
-Substitute `{prompt}` in the configured `args` with the absolute path to the temp prompt file. The prompt file path is `/tmp/issue-<N>-prompt.md`:
-
-```bash
-prompt_file="/tmp/issue-<N>-prompt.md"
-substituted_args="${args//\{prompt\}/$prompt_file}"
-```
-
-- If `args` was non-empty: the agent command is `<binary> $substituted_args`
-- If `args` was empty (stdin-piping agents): the agent command is `cat $prompt_file | <binary>`
-
-#### 4c. Compose the full tmux command
-
-Use `$substituted_args` from step 4b:
-
-```bash
-tmux new-window -n "issue-<N>-<repo-slug>" -c <absolute-worktree-path> "<runner-prefix> <binary> $substituted_args"
-```
-
-**With mise:**
-```bash
-tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "mise x --allow-env='*' -- $binary $substituted_args"
-```
-
-**Without mise (fallback):**
-```bash
-tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "$SHELL -c '$binary $substituted_args'"
-```
-
-For stdin-piping agents (empty args), use the pipe form:
-
-**With mise:**
-```bash
-tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "mise x --allow-env='*' -- sh -c 'cat $prompt_file | $binary'"
-```
-
-**Without mise:**
-```bash
-tmux new-window -n "issue-<N>-<repo>" -c /path/to/worktree "$SHELL -c 'cat $prompt_file | $binary'"
-```
+Do **not** pre-write the prompt to a separate file — tmux-launch-agent writes its own temp file if the target agent uses prompt-file mode.
 
 The window stays open after the child completes so the user can review the output.
 
-Do not remove the prompt file immediately — the child agent may not have read it yet. The file will be read from `/tmp` and cleaned up by the OS or the child after use.
+Completion criterion: `tmux new-window` exits 0 and a new tmux window appears with the child agent session active.
 
-### 5. Print summary
+### 4. Print summary
 
 After launching, print:
 - Issue number and title
 - Worktree path
 - Branch name
 - Base branch
-- Agent used (from `docs/agents/agent-cli.md`)
+- Agent used (detected by tmux-launch-agent)
 - Tmux window name (so the user can find it)
 - Cleanup command: `git worktree remove <worktree-path> && git worktree prune`
 
