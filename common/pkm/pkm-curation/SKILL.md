@@ -1,23 +1,24 @@
 ---
 name: pkm-curation
-description: Curate an Obsidian vault — classify notes, normalize frontmatter, add wikilinks, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick. 
+description: Curate an Obsidian vault — classify notes, normalize frontmatter, add links, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick. 
 ---
 
 # PKM Curation
 
-Use this skill when working inside a Markdown-first vault that values curation over collection.
+Use this skill when working inside a Markdown-first vault that follows the [Open Knowledge Format (OKF) v0.1](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) conventions.
 
 ## Goals
 
 - Turn raw notes into reusable atomic notes.
 - Keep new notes consistent with vault conventions.
-- Strengthen the link graph with meaningful `[[wikilinks]]`.
+- Strengthen the link graph with meaningful markdown links.
 - Extract atomic notes from long or mixed-topic notes.
+- Maintain bundle integrity: update index.md and log.md when adding or changing bundle contents.
 
 ## Read This First
 
 - Read `AGENTS.md` in the current repo scope before editing notes.
-- Read `references/vault-conventions.md` when normalizing metadata, deciding note types, or choosing folders.
+- Read `references/vault-conventions.md` when normalizing metadata, deciding note types, or choosing folders. This reference now documents the merged OKF + vault frontmatter schema.
 - Read `references/agent-integration.md` when running this skill through an agent.
 - Keep changes small and reviewable.
 - Keep file operations local to the vault unless the user explicitly asks otherwise.
@@ -29,13 +30,13 @@ Use this skill when working inside a Markdown-first vault that values curation o
 fd --type f ".md" "path/to/obsidian-vault" | rg -i "keyword"
 
 # Search by content
-rg -l "keyword" "path/to/obsidian-vault" --include "*.md"
+rg -l "keyword" "path/to/obsidian-vault" -g "*.md"
 
-# Find backlinks to a note
-rg -l "\\[\\[Note Title\\]\\]" "path/to/obsidian-vault" --include "*.md"
+# Find backlinks to a note (markdown link form)
+rg -l "Note Title" "path/to/obsidian-vault" -g "*.md"
 
-# Find index notes
-fd --type f "Index" "path/to/obsidian-vault"
+# Find bundle index files
+fd "index.md" "path/to/obsidian-vault"
 ```
 
 ## Rules
@@ -46,60 +47,85 @@ fd --type f "Index" "path/to/obsidian-vault"
 - Preserve the user's voice unless the user asks for a rewrite.
 - Keep source material and evergreen ideas separate when possible.
 - Treat `Inbox/` as temporary capture, not long-term storage.
-- Preserve all command blocks, code snippets, configuration directives, and
-  step-by-step instructions verbatim. Do not summarize or condense them.
-- For reference/source notes: add a brief overview at the top, but keep the
-  original commands and details intact below. Completeness > brevity.
+- Preserve all command blocks, code snippets, configuration directives, and step-by-step instructions verbatim. Do not summarize or condense them.
+- For reference/source notes: add a brief overview at the top, but keep the original commands and details intact below. Completeness > brevity.
 - Read every file completely before moving, renaming, or modifying it. Do not rely on head/tail, heading-only scans, or partial reads to judge a file's content.
+- **Bundle awareness**: When creating or editing notes inside a bundle directory, update the bundle's `index.md` (add or update the entry) and append an entry to `log.md`.
 
 ## Note-Type Heuristics
 
-### Inbox note
+Use the type vocabulary from `references/vault-conventions.md`. When inferring a type for a note, use these heuristics:
 
+### Inbox note → `type: Inbox`
 Use when the note is raw capture, partial thinking, copied text, or an unprocessed link dump.
+- Actions: clean obvious structure issues, add frontmatter if missing, classify for later promotion, avoid over-polishing unless requested.
 
-Actions:
-- clean obvious structure issues
-- add frontmatter if missing
-- classify for later promotion
-- avoid over-polishing unless requested
-
-### Source note
-
+### Source note → `type: Source`
 Use when the note is based on an article, video, book, paper, transcript, or other external material.
+- Actions: keep source context intact, summarize key takeaways, extract reusable ideas into separate atomic notes, link to related concepts and projects.
 
-Actions:
-- keep source context intact
-- summarize key takeaways
-- extract reusable ideas into separate atomic notes
-- link to related concepts and projects
-
-### Atomic note
-
+### Atomic note → `type: Concept`
 Use when the note captures one durable idea, concept, claim, pattern, or insight.
+- Actions: ensure one main idea per note, make the title concept-focused, add links to neighboring ideas, keep it concise and self-contained.
 
-Actions:
-- ensure one main idea per note
-- make the title concept-focused
-- add links to neighboring ideas
-- keep it concise and self-contained
-
-### Project note
-
+### Project note → `type: Project`
 Use when the note supports active work, planning, resources, decisions, or tasks.
+- Actions: preserve project context, link tasks to the project note, avoid turning active project logistics into evergreen notes unless there is a reusable insight.
 
-Actions:
-- preserve project context
-- link tasks to the project note
-- avoid turning active project logistics into evergreen notes unless there is a reusable insight
-
-### Daily note
-
+### Daily note → `type: Daily`
 Use when the note is date-based and captures activity, learning, tasks, or reflection for a single day.
+- Actions: preserve chronology, link out to durable notes rather than stuffing ideas into the daily note.
 
-Actions:
-- preserve chronology
-- link out to durable notes rather than stuffing ideas into the daily note
+### Reference note → `type: Reference`
+Use when the note is lookup material, documentation, specs, or external reference.
+- Actions: preserve the reference content, add structured overview at top, link to related notes.
+
+## Frontmatter Normalization
+
+All notes should have the merged OKF + vault frontmatter schema:
+
+```yaml
+---
+type: <OKF type name>              # OKF required
+title: <display name>              # OKF recommended
+description: <one-line summary>    # OKF recommended
+resource: <canonical URI>          # OKF recommended (when applicable)
+tags: [<tag>, ...]                 # OKF recommended + vault required
+timestamp: <ISO 8601 datetime>     # OKF recommended
+id: <unique identifier>            # vault required
+aliases: [<alias>, ...]            # vault required
+area: <area/domain>                # vault required
+project: <project name or ''>      # vault required
+---
+```
+
+When normalizing existing frontmatter:
+- Add `type` using the classification heuristics above.
+- Ensure `id` is a stable kebab-case slug.
+- Ensure `timestamp` is ISO 8601 format.
+- Ensure `project` is a plain string, not a `[[wikilink]]`.
+- Preserve any additional OKF extension keys.
+
+## Link Convention
+
+Use **standard markdown links**: `[text](relative/path.md)`. Do NOT use `[[wikilinks]]`.
+
+When converting existing wikilinks:
+- `[[Note Title]]` → `[Note Title](Note%20Title.md)`
+- `[[Note Title|alias]]` → `[alias](Note%20Title.md)`
+
+Use vault-relative paths from the linking file to the target.
+
+## Bundle Awareness
+
+When working inside a bundle directory:
+- **After creating a new note**: add an entry to the bundle's `index.md` and append an entry to `log.md`.
+- **After modifying an existing note**: if the change is significant, update the description in `index.md` and append an entry to `log.md`.
+- **After deleting or moving a note**: remove or update its entry in `index.md` and append an entry to `log.md`.
+
+The bundle map is defined in `references/vault-conventions.md`. Key bundle directories include: `Knowledge/`, `Notes/` (with sub-bundles), `Resources/` (with sub-bundles), `Profiles/`, `AI Conversation Summaries/`, `Research/<packet>/`, `Projects/<project>/`.
+
+Non-bundle directories (`Inbox/`, `Dailies/`, `Templates/`, `Clippings/`) do not get `index.md` or `log.md`.
 
 ## Linking Guidance
 
@@ -122,21 +148,22 @@ Extract atomic notes when a note contains:
 - a reusable method, distinction, or definition
 - a concept that should be linked from many places
 
-Keep extracted notes short. One note, one idea.
+Keep extracted notes short. One note, one idea. When extracting into a bundle directory, update `index.md` and `log.md`.
 
 ## Common Tasks
 
 ### Curate one note
 
 1. Inspect the target note and locate its file in the vault.
-2. Identify the note type: inbox, source, atomic, project, daily, or reference.
-3. Normalize frontmatter and basic structure.
+2. Identify the note type: inbox, source, concept, project, daily, reference, or person.
+3. Normalize frontmatter and basic structure using the merged schema.
 4. Clarify the title if vague or timestamp-like.
 5. Tighten headings and summary; distill if it mixes too many ideas.
-6. Inspect nearby related notes, then add a few strong `[[wikilinks]]`.
+6. Inspect nearby related notes, then add a few strong markdown links.
 7. If the note contains multiple durable ideas, extract 1-3 atomic notes.
 8. Suggest moving only if the destination is clearly better.
-9. Patch the note in place and return a short summary of edits.
+9. If inside a bundle, update `index.md` and `log.md`.
+10. Patch the note in place and return a short summary of edits.
 
 **Completion Criterion**: Note inspected, classified, normalized, linked, and patched, with a summary returned to the user.
 
@@ -187,6 +214,7 @@ When responding to the user:
 - name the file or files touched
 - separate completed edits from suggested next actions
 - call out anything that still needs user confirmation
+- mention any bundle index/log updates made
 
 ## If You Need More Context
 
