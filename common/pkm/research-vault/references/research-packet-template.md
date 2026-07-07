@@ -1,10 +1,27 @@
-# Research Packet Template
+# Research Packet Template (OKF v0.1)
 
 Use inside `Research/<YYYY-MM-DD> <Topic>/` unless the vault has a clearer convention.
 
-## Required files
+The packet is an OKF bundle. See [vault-conventions.md](../../pkm-curation/references/vault-conventions.md) for the full frontmatter schema and type vocabulary.
 
-### `Index.md`
+## Bundle structure
+
+```
+Research/<YYYY-MM-DD> <Topic>/
+├── index.md              # OKF progressive-disclosure, no frontmatter
+├── log.md                # OKF chronological, datestamped entries (newest first)
+├── Sources.md            # Research Source List
+├── Synthesis.md          # Research Synthesis
+├── Claims.md             # Research Claim Index
+├── Questions.md          # Research Questions
+├── Conversation.md       # Conversation Report
+├── Glossaries.md         # Research Glossary
+└── <atomic-note>.md      # Concept
+```
+
+### `index.md`
+
+No frontmatter. Progressive-disclosure listing:
 
 ```markdown
 # <Topic>
@@ -18,19 +35,19 @@ Use inside `Research/<YYYY-MM-DD> <Topic>/` unless the vault has a clearer conve
 -
 
 ## Packet Map
-- [[Sources]]
-- [[Synthesis]]
-- [[Claims]]
-- [[Questions]]
-- [[Conversation]]
-- [[Glossaries]]
-- [[Log]]
+- [Sources](Sources.md) — compiled source list
+- [Synthesis](Synthesis.md) — synthesized answer
+- [Claims](Claims.md) — evidence-backed claims
+- [Questions](Questions.md) — open and resolved questions
+- [Conversation](Conversation.md) — raw conversation record
+- [Glossaries](Glossaries.md) — term definitions
+- [Log](Log.md) — session log
 
 ## Related Vault Notes
 -
 
 ## Compiled Pages
-| Page | Type | One-line purpose | Source basis | Status |
+| Page | Type | Purpose | Source basis | Status |
 |---|---|---|---|---|
 |  | source summary \| concept \| claim cluster \| synthesis \| promoted |  |  | draft \| reviewed \| promoted |
 
@@ -38,9 +55,33 @@ Use inside `Research/<YYYY-MM-DD> <Topic>/` unless the vault has a clearer conve
 -
 ```
 
+### `log.md`
+
+Datestamped entries, newest first. No frontmatter required (concept notes in the bundle DO need frontmatter, but log.md follows OKF §7 format).
+
+```markdown
+# Log
+
+## YYYY-MM-DD
+* **Event**: Description of what changed.
+* **Files changed**: ...
+```
+
 ### `Sources.md`
 
 ```markdown
+---
+type: Research Source List
+title: <Topic> - Sources
+description: Compiled source list for <Topic>.
+tags: [research, sources]
+timestamp: <ISO 8601>
+id: <topic-slug>-sources
+aliases: []
+area: Research
+project: ''
+---
+
 # Sources
 
 | Source | Type | Why useful | Reliability notes | Accessed |
@@ -60,6 +101,18 @@ Include source links, books, papers, docs, videos, examples, search terms, or re
 ### `Synthesis.md`
 
 ```markdown
+---
+type: Research Synthesis
+title: <Topic> - Synthesis
+description: Compiled answer for <Topic> research.
+tags: [research, synthesis]
+timestamp: <ISO 8601>
+id: <topic-slug>-synthesis
+aliases: []
+area: Research
+project: ''
+---
+
 # Synthesis
 
 ## Short Answer
@@ -79,6 +132,18 @@ Include source links, books, papers, docs, videos, examples, search terms, or re
 ### `Claims.md`
 
 ```markdown
+---
+type: Research Claim Index
+title: <Topic> - Claims
+description: Evidence-backed claims for <Topic> research.
+tags: [research, claims]
+timestamp: <ISO 8601>
+id: <topic-slug>-claims
+aliases: []
+area: Research
+project: ''
+---
+
 # Claims
 
 ## Claim: <single answerable claim>
@@ -96,6 +161,18 @@ Include source links, books, papers, docs, videos, examples, search terms, or re
 ### `Questions.md`
 
 ```markdown
+---
+type: Research Questions
+title: <Topic> - Questions
+description: Open and resolved questions for <Topic> research.
+tags: [research, questions]
+timestamp: <ISO 8601>
+id: <topic-slug>-questions
+aliases: []
+area: Research
+project: ''
+---
+
 # Questions
 
 ## User Questions
@@ -114,6 +191,18 @@ Include source links, books, papers, docs, videos, examples, search terms, or re
 ### `Conversation.md`
 
 ```markdown
+---
+type: Conversation Report
+title: <Topic> - Conversation
+description: Narrative summary of the research conversation for <Topic>.
+tags: [research, conversation]
+timestamp: <ISO 8601>
+id: <topic-slug>-conversation
+aliases: []
+area: Research
+project: ''
+---
+
 # Conversation
 
 ## Learning Goal
@@ -132,25 +221,21 @@ Include source links, books, papers, docs, videos, examples, search terms, or re
 
 Record important answers, corrections, and scope decisions as the session progresses.
 
-### `Log.md`
-
-```markdown
-# Log
-
-Append one entry for each ingest, query filed back into the packet, lint pass, promotion, or major correction.
-
-## YYYY-MM-DD HH:MM — <ingest | query | lint | promotion | correction>
-- Input:
-- Files read:
-- Files changed:
-- Claims added or revised:
-- Links added:
-- Open issues:
-```
-
 ### `Glossaries.md`
 
 ```markdown
+---
+type: Research Glossary
+title: <Topic> - Glossary
+description: Term definitions for <Topic> research.
+tags: [research, glossary]
+timestamp: <ISO 8601>
+id: <topic-slug>-glossary
+aliases: []
+area: Research
+project: ''
+---
+
 # Glossaries
 
 ## <Term or Acronym>
@@ -167,12 +252,17 @@ Add every acronym, abbreviation, domain-specific phrase, specialized term, jargo
 
 ```markdown
 ---
+type: Concept
+title: <Concept Name>
+description: <One-line summary of the concept>.
+tags: [research, atomic-note, <topic-tag>]
+timestamp: <ISO 8601>
 id: <stable-id>
 aliases: []
-tags: [research, atomic-note]
 area: <area>
-project: [[<packet topic>]]
+project: <packet topic>
 ---
+
 # <Concept>
 
 ## Idea
@@ -182,7 +272,7 @@ project: [[<packet topic>]]
 <Explain retrieval, decision, or learning value.>
 
 ## Evidence or source
-- Claim: [[Claims#Claim <anchor or short title>]]
+- Claim: [Claims](Claims.md)
 - Source:
 
 ## Links
@@ -191,5 +281,9 @@ project: [[<packet topic>]]
 - Contrasts:
 
 ## Promotion status
-- Packet-local | candidate for main vault | promoted to [[path/to/promoted note]]
+- Packet-local | candidate for main vault | promoted to [path/to/promoted note](path/to/promoted.md)
 ```
+
+## Linking
+
+Use standard markdown links `[text](relative/path.md)` throughout. Do NOT use `[[wikilinks]]`. Intra-packet links are bundle-relative (e.g., `[Claims](Claims.md)`). Cross-bundle links use vault-relative paths.

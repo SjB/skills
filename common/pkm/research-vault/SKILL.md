@@ -1,16 +1,95 @@
 ---
 name: research-vault
-description: Research a topic through a one-question-at-a-time learning conversation, answer directly, share resources when useful, and save a linked Obsidian research packet.
+description: Research a topic through a one-question-at-a-time learning conversation, answer directly, share resources when useful, and save a linked OKF-conformant research packet in the Obsidian vault.
 disable-model-invocation: true
 ---
 
 # Research Vault
 
-Use when the user wants to learn or research a topic conversationally and save the outcome in an Obsidian vault.
+Use when the user wants to learn or research a topic conversationally and save the outcome in an Obsidian vault using the [Open Knowledge Format (OKF) v0.1](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md).
 
 ## Packet
 
-Create one vault folder per research run, normally `Research/<YYYY-MM-DD> <Topic>/`, containing all notes from the run: `Index.md`, `Sources.md`, `Synthesis.md`, `Claims.md`, `Questions.md`, `Conversation.md`, `Glossaries.md`, `Log.md`, and any atomic notes. Treat the packet as a Karpathy-style compiled wiki for the topic: raw sources stay immutable, packet notes are the maintained synthesis layer, and this skill is the schema. Load `references/research-packet-template.md` before writing packet files or when exact structure matters.
+Create one vault folder per research run, normally `Research/<YYYY-MM-DD> <Topic>/`, containing an OKF bundle with `index.md` (progressive-disclosure listing, no frontmatter), `log.md` (chronological), and packet pages. Load `references/research-packet-template.md` before writing packet files or when exact structure matters.
+
+### Bundle structure
+
+```
+Research/<YYYY-MM-DD> <Topic>/
+├── index.md              # OKF progressive-disclosure, no frontmatter
+├── log.md                # OKF chronological, datestamped entries (newest first)
+├── Sources.md            # Research Source List
+├── Synthesis.md          # Research Synthesis
+├── Claims.md             # Research Claim Index
+├── Questions.md          # Research Questions
+├── Conversation.md       # Conversation Report
+├── Glossaries.md         # Research Glossary
+└── <atomic-note>.md      # Concept / atomic notes
+```
+
+### Reserved filenames
+
+`index.md` and `log.md` are reserved — they MUST follow OKF format and MUST NOT be used for concept documents.
+
+### Frontmatter schema (merged — OKF + vault fields)
+
+Every concept document (non-reserved `.md` file) MUST have:
+
+```yaml
+---
+type: <OKF type name>              # OKF required
+title: <display name>              # OKF recommended
+description: <one-line summary>    # OKF recommended
+resource: <canonical URI>          # OKF recommended (when applicable)
+tags: [<tag>, ...]                 # OKF recommended + vault required
+timestamp: <ISO 8601 datetime>     # OKF recommended
+id: <unique identifier>            # vault required
+aliases: [<alias>, ...]            # vault required
+area: <area/domain>                # vault required
+project: <project name or ''>      # vault required
+---
+```
+
+Use the type vocabulary from `references/vault-conventions.md`.
+
+### `index.md` (OKF progressive-disclosure)
+
+No frontmatter. Sections with bullet links and descriptions:
+
+```markdown
+# <Topic>
+
+## Purpose
+- Learning goal:
+- Scope:
+- Success criteria:
+
+## Packet Map
+- [Sources](Sources.md) — compiled source list
+- [Synthesis](Synthesis.md) — synthesized answer
+- [Claims](Claims.md) — evidence-backed claims
+- [Questions](Questions.md) — open and resolved questions
+- [Conversation](Conversation.md) — raw conversation record
+- [Glossaries](Glossaries.md) — term definitions
+- [Log](Log.md) — session log
+
+## Compiled Pages
+| Page | Type | Purpose | Status |
+|---|---|---|---|
+|  |  |  | draft \| reviewed \| promoted |
+```
+
+### `log.md` (OKF chronological)
+
+Datestamped entries, newest first:
+
+```markdown
+# Log
+
+## YYYY-MM-DD
+* **Event type**: Description of what happened.
+* **Files changed**: ...
+```
 
 ## Workflow
 
@@ -18,12 +97,12 @@ Create one vault folder per research run, normally `Research/<YYYY-MM-DD> <Topic
 2. **Frame the goal.** Ask one question at a time until you can restate the topic, learning objective, scope, and success criteria. Discover the user's goal, prior knowledge, intended use, depth, constraints, output preference, and trusted/distrusted sources only as needed.
 3. **Create or defer the folder.** Create the packet folder once the topic has a stable working title; if still vague, keep conversing. Before writing durable notes, every artifact must have a path inside the packet folder.
 4. **Map context.** Search the vault for the topic, synonyms, projects, and neighboring concepts. Read enough relevant notes to make meaningful links, not keyword matches.
-5. **Ingest sources into claims.** For each source, preserve its path in `Sources.md`, extract evidence-backed claims into `Claims.md`, update affected concept/summary pages, and append an event to `Log.md`. Completion: every non-trivial factual claim has source, evidence, confidence, and at least one related link or explicit note that no link exists yet.
+5. **Ingest sources into claims.** For each source, preserve its path in `Sources.md`, extract evidence-backed claims into `Claims.md`, update affected concept/summary pages, and append an event to `log.md`. Completion: every non-trivial factual claim has source, evidence, confidence, and at least one related link or explicit note that no link exists yet.
 6. **Research and teach.** Answer the user directly from the compiled packet when possible, explain findings in small chunks, cite claims, preserve uncertainty, share resources when they improve learning or evidence quality, and correct misunderstandings before moving on.
-7. **File good answers.** When a query produces a durable synthesis, decision, comparison, or explanation, add it back into `Synthesis.md`, `Claims.md`, or an atomic note instead of leaving it only in chat. Append the query and filed destination to `Log.md`.
+7. **File good answers.** When a query produces a durable synthesis, decision, comparison, or explanation, add it back into `Synthesis.md`, `Claims.md`, or an atomic note instead of leaving it only in chat. Append the query and filed destination to `log.md`.
 8. **Check understanding and completeness.** Ask one diagnostic or completeness question per turn. Answer follow-ups with evidence, examples, counterarguments, implementation details, or resources as needed. Capture unresolved gaps in `Questions.md`.
-9. **Write incrementally.** For long sessions, update `Conversation.md`, `Questions.md`, `Glossaries.md`, `Sources.md`, and `Log.md` as the work progresses. By the end, no research, teaching insight, user question, glossary term, source, or durable knowledge should exist only in chat.
-10. **Lint the packet.** Before final report or promotion, check for unsupported claims, stale or contradictory claims, missing source links, orphan atomic notes, glossary terms without links, unanswered questions, and missing backlinks from `Index.md`. Record notable lint findings or fixes in `Log.md`.
+9. **Write incrementally.** For long sessions, update `Conversation.md`, `Questions.md`, `Glossaries.md`, `Sources.md`, and `log.md` as the work progresses. By the end, no research, teaching insight, user question, glossary term, source, or durable knowledge should exist only in chat.
+10. **Lint the packet.** Before final report or promotion, check for unsupported claims, stale or contradictory claims, missing source links, orphan atomic notes, glossary terms without links, unanswered questions, and missing backlinks from `index.md`. Record notable lint findings or fixes in `log.md`.
 11. **Promote reusable notes.** If a packet note becomes broadly useful beyond the run, propose promotion to the main vault, copy or move only with user approval, leave a provenance link in the packet, and update relevant indexes/MOCs.
 12. **Report.** Summarize the packet path, files changed, links or backlink suggestions, top takeaways, what the user now understands, remaining questions, lint status, and promotion candidates.
 
@@ -35,7 +114,7 @@ Create one vault folder per research run, normally `Research/<YYYY-MM-DD> <Topic
 - Use a teach-back loop for complex topics: plain-language explanation → concrete example → one check question or restatement prompt → correction → continue only when the user is satisfied or uncertainty is captured.
 - Ask checks before research, after initial framing, after major findings, and before finalizing notes.
 - When the user corrects you, record the correction in `Conversation.md`, update affected packet notes, and prefer the corrected framing unless later evidence contradicts it.
-- Record important answers and useful resources in `Conversation.md`; reflect scope-changing details in `Index.md`, `Sources.md`, or `Synthesis.md`.
+- Record important answers and useful resources in `Conversation.md`; reflect scope-changing details in `index.md`, `Sources.md`, or `Synthesis.md`.
 
 ## Capture Rules
 
@@ -49,18 +128,20 @@ Create one vault folder per research run, normally `Research/<YYYY-MM-DD> <Topic
 - Keep citations close to claims; mark confidence when evidence is incomplete or contested.
 - Preserve useful quotes verbatim with attribution.
 - Distinguish source claims from interpretation; record failed searches or missing evidence when they affect the conclusion.
-- Create atomic notes in the packet folder for durable concepts; link each from `Index.md` and back to its source or synthesis section.
+- Create atomic notes in the packet folder for durable concepts; link each from `index.md` and back to its source or synthesis section.
 
 ## Retrieval Checks
 
 Run these checks before treating the packet as complete:
 
-- Could a future agent answer the user's main question from `Index.md`, `Synthesis.md`, and `Claims.md` without rereading raw sources?
-- Does `Index.md` point to every durable packet page with enough context to choose the right page?
+- Could a future agent answer the user's main question from `index.md`, `Synthesis.md`, and `Claims.md` without rereading raw sources?
+- Does `index.md` point to every durable packet page with enough context to choose the right page?
 - Are important terms findable in `Glossaries.md` and linked from the pages that use them?
 - Are contradictions, uncertainty, and missing evidence visible near the relevant claims?
-- Does `Log.md` show the ingest/query/lint history well enough to reconstruct what changed and why?
+- Does `log.md` show the ingest/query/lint history well enough to reconstruct what changed and why?
 
 ## Linking Rules
 
-Use Obsidian wikilinks: `[[Note Title]]` or `[[path/to/Note|alias]]`. Add links only when they explain context: broader concepts, projects, areas, MOCs, sources, authors, methods, tools, domains, supporting/refining/contradicting claims, or active problems. Do not link on shared words alone.
+Use standard markdown links: `[text](relative/path.md)`. Do NOT use `[[wikilinks]]`. Add links only when they explain context: broader concepts, projects, areas, MOCs, sources, authors, methods, tools, domains, supporting/refining/contradicting claims, or active problems. Do not link on shared words alone.
+
+Use bundle-relative links for intra-packet references (`[Sources](Sources.md)`) and vault-relative or absolute paths for cross-bundle references.
