@@ -32,3 +32,14 @@ Create a Gitea issue.
 ## When a skill says "fetch the relevant ticket"
 
 Run `tea issue <number> --comments`.
+
+## Wayfinding operations
+
+Used by `/wayfinder`. The **map** is a single issue with **child** issues as tickets.
+
+- **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `tea issue create --label wayfinder:map`.
+- **Child ticket**: an issue linked to the map as a GitHub sub-issue (`tea api` on the sub-issues endpoint). Where sub-issues aren't enabled, add the child to a task list in the map body and put `Part of #<map>` at the top of the child body. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, the ticket is assigned to the driving dev.
+- **Blocking**: GitHub's **native issue dependencies** — the canonical, UI-visible representation. Add an edge with `tea api --method POST /repos/{owner}/{repo}/issues/<child>/dependencies -F index=<blocker-issue-number> -F repo=<blocker-repo-name> -F owner=<bocker-owner-name>`, where `<blocker-usse-number>` is the blocker's numeric **issue number** (`tea api repos/{owner}/{repo}/issues/<n> --jq ".number. .repository.name, .repository.owner"`, where `.number` is the `<blocker-issue-number>`, `.repository.name` is the `<blocker-repo-name>` and `.repository.owner` is the `<blocker-repo-owner>`. Where dependencies aren't available, fall back to a `Blocked by: #<n>, #<n>` line at the top of the child body. A ticket is unblocked when every blocker is closed.
+- **Frontier query**: list the map's open dependencies (`tea api /repos/{owner}/{repo}/issues/<n>/dependencies | jq '.[] | select(.state = "open") .number'`, scoped to the map's sub-issues / task list), drop any with an open blocker (`list of dependencies is not empty`, or an open issue in the `Blocked by` line) or an assignee; first in map order wins.
+- **Claim**: `tea issue edit <n> --add-assignees @me` — the session's first write.
+- **Resolve**: `tea comments <n> "<answer>"`, then `tea issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.

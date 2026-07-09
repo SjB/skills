@@ -35,7 +35,7 @@ Assume the user does not know what these terms mean. Each section starts with a 
 
 Section A - Issue tracker:
 
-> Explainer: The "issue tracker" is where issues live for this repo. Skills like `to-issues`, `triage`, `to-prd`, and `qa` read from and write to it — they need to know whether to call `gh issue create`, write a markdown file under `.scratch/`, or follow some other workflow you describe. Pick the place you actually track work for this repo.
+> Explainer: The "issue tracker" is where issues live for this repo. Skills like `to-tickets`, `triage`, `to-spec`, and `qa` read from and write to it — they need to know whether to call `gh issue create`, write a markdown file under `.scratch/`, or follow some other workflow you describe. Pick the place you actually track work for this repo.
 
 Default posture: these skills were designed for GitHub. If a `git remote` points at GitHub, propose that. If a `git remote` points at GitLab (`gitlab.com` or a self-hosted host), propose GitLab. If a `git remote` point at a Gitea (a self-hosted host with a `gitea` in the url). Otherwise ask the user, offer:
 
@@ -64,7 +64,7 @@ Default: each role's string equals its name. Ask the user if they want to overri
 
 Confirm the layout:
 
-- **Single-context** — one `CONTEXT.md` + `adr` at the repo root. Most repos are this.
+- **Single-context** — one `CONTEXT.md` + `docs/adr` at the repo root. Most repos are this.
 - **Multi-context** — `CONTEXT-MAP.md` at the root pointing to per-context `CONTEXT.md` files (typically a monorepo).
 
 **Section D — ADR wiki.**
