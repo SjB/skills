@@ -17,7 +17,7 @@ Arguments are optional. If provided, they describe what the next session should 
 
 ### 1. Assess the conversation
 
-Review what has been done, what remains, and any user-provided focus. Identify existing artifacts that capture the work so far (PRDs, plans, ADRs, issues, commits, diffs) so they can be referenced rather than duplicated.
+Review what has been done, what remains, and any user-provided focus. Identify existing artifacts that capture the work so far (PRDs/specs, plans, ADRs, issues/tickets, commits, diffs) so they can be referenced rather than duplicated.
 
 If the user passed arguments, treat them as the priority or scope for the next session.
 
@@ -31,7 +31,7 @@ Write a summary of the current state so a fresh agent can continue the work with
 - **Next steps** — what needs to be done next, in priority order
 - **Open questions** — decisions still needed, unknowns, trade-offs
 - **Suggested skills** — a bullet list of skills the next agent should invoke (e.g. `/tdd`, `/code-review`)
-- **References** — paths or URLs to existing artifacts (PRDs, plans, ADRs, issues, commits, diffs). Do **not** duplicate their content — reference them.
+- **References** — paths or URLs to existing artifacts (PRDs/specs, plans, ADRs, issues/tickets, commits, diffs). Do **not** duplicate their content — reference them.
 
 The summary is a **compass**, not a copy: it points the next agent where to go, it does not replay where you've been. Any content already captured in the referenced artifacts does not belong here.
 
