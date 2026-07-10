@@ -1,5 +1,5 @@
 ---
-name: commit
+name: commit-staged
 description: Commit staged files with a conventional commit message.
 disable-model-invocation: true
 ---

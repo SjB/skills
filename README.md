@@ -1,12 +1,12 @@
 # Skills
 
-A collection of agent skills (slash commands and behaviors) loaded into Steve Beaulac's agents.
+A collection of agent skills (slash commands and behaviors) loaded into my agent.
 
 ## User-invoked
 
 - [agent-handoff](common/in-progress/agent-handoff/SKILL.md) — Hand the current conversation off to a fresh background agent that picks up the work immediately.
 - [audio-product-dsp](common/deprecated/audio-production-dispatcher/SKILL.md) — Dispatch audio product DSP hardware/software engineering requests to the best specialist workflow with measurable product-focused outputs.
-- [commit](common/engineering/commit/SKILL.md) — Commit staged files with a conventional commit message.
+- [commit-staged](common/engineering/commit-staged/SKILL.md) — Commit staged files with a conventional commit message.
 - [conversation-summary](common/pkm/conversation-summary/SKILL.md) — Save the current conversation as a comprehensive report note in your Obsidian vault, following OKF v0.1 conventions.
 - [crit](common/pkm/crit/SKILL.md) — Brainstorm with AI using the CRIT framework to generate and evaluate ideas.
 - [dsp-research-engineering](common/deprecated/dsp-research-dispatcher/SKILL.md) — Route DSP hardware and software research-engineering requests to the best specialist workflow and return a unified, decision-ready output.
