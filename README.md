@@ -22,6 +22,7 @@ A collection of agent skills (slash commands and behaviors) loaded into Steve Be
 
 - [lsp-code-analysis](common/engineering/lsp-code-analysis/SKILL.md) — Semantic code analysis via LSP. Navigate code (definitions, references, implementations), search symbols, preview refactorings, and get file outlines. Use for exploring unfamiliar codebases or performing safe refactoring.
 - [pkm-curation](common/pkm/pkm-curation/SKILL.md) — Curate an Obsidian vault — classify notes, normalize frontmatter, add wikilinks, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick.
+- [youtube-video-capture](common/pkm/youtube-video-capture/SKILL.md) — Fetch subtitles from a YouTube video, summarize the content, and save the summary and raw subtitles to the Video bundle.
 - [forge-gitea](common/deprecated/forge-gitea/SKILL.md) — Use the Gitea CLI (`tea`) to interact with Gitea issues, pull requests, releases, CI, and repository state.
 - [forge-github](common/deprecated/forge-github/SKILL.md) — Use the GitHub CLI (`gh`) to interact with GitHub issues, pull requests, releases, CI, and repository state.
 - [forge-interaction](common/deprecated/forge-interaction/SKILL.md) — Use when the user wants forge work such as opening a PR, creating or listing issues, checking CI, looking at the repo, pushing a branch, publishing changes, or making a release on GitHub or Gitea. This skill now delegates to specialized skills for better predictability.

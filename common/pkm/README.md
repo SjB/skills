@@ -9,3 +9,4 @@
 ## Model-invoked
 
 - [pkm-curation](pkm-curation/SKILL.md) — Curate an Obsidian vault — classify notes, normalize frontmatter, add wikilinks, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick.
+- [youtube-video-capture](youtube-video-capture/SKILL.md) — Fetch subtitles from a YouTube video, summarize the content, and save the summary and raw subtitles to the Video bundle.
