@@ -18,17 +18,17 @@ disable-model-invocation: true
 
 #### a. Label the issue `in-progress`
 
-Change the issue triage label to `in-progress`.
+Change the issue triage label to `in-progress`, remove all other labels.
 
 Completion criterion: The issue label is confirmed as `in-progress`.
 
 #### b. Create the worktree
 
 ```bash
-git worktree add -b <branch-name> ../<repo-name>-issue-<N> <base>
+git worktree add -b <branch-name> ../issue-<N>-<repo-slug> <base>
 ```
 
-Completion criterion: The worktree exists at `../<repo-name>-issue-<N>` and the new branch is checked out.
+Completion criterion: The worktree exists at `../issue-<N>-<repo-slug>` and the new branch is checked out.
 
 ### 2. Compose the child prompt
 
@@ -36,16 +36,15 @@ Assemble a single prompt that the child agent will receive. Include:
 
 - **Issue body** — the full markdown body of the issue.
 - **Comments** — all comments, if any
-- **Standing instruction**: "Implement using /tdd where possible, at the pre-agreed seam. Run typechecking regularly, run single test files regularly, and run the full test suite once at the end. Once done, use /code-review to review the work. Commit your work and push the new branch and create a PR with a link to the issue, one-sentence summary, and short key-changes list. Comment on the issue with the PR link: `PR opened: <url>`. Change the issue triage label to needs-review when done."
-- **Failure instruction**: "If any step fails, report where you stopped and what remains for manual recovery. Print the exact commands needed."
+- **Standing instruction**: "Implement using tdd skill where possible, at the pre-agreed seam. Run typechecking regularly, run single test files regularly, and run the full test suite once at the end. Once done, use code-review skill to review the work. Commit your work and push the new branch and create a PR with a link to the issue, one-sentence summary, and short key-changes list. Comment on the issue with the PR link: `PR opened: <url>`. Change the issue triage label to needs-review when done. Remove all other labels"
 
-(The prompt is passed as arguments to tmux-launch-agent in step 3, which handles writing it to a temp file if needed.)
+- **Failure instruction**: "If any step fails, report where you stopped and what remains for manual recovery. Print the exact commands needed."
 
 Completion criterion: The prompt is composed with all required sections (issue body, comments, standing instruction, failure instruction).
 
 ### 3. Launch the child via tmux-launch-agent
 
-Use the [`tmux-launch-agent`](../../../../.agents/skills/tmux-launch-agent/SKILL.md) skill to fork the child agent into a new tmux window. Tmux-launch-agent handles agent detection, config lookup, command building (prompt-file or stdin-pipe), mise/SHELL wrapping, and `tmux new-window` creation.
+Use the `tmux-launch-agent` skill to fork the child agent into a new tmux window. Tmux-launch-agent handles agent detection, config lookup, command building (prompt-file or stdin-pipe), mise/SHELL wrapping, and `tmux new-window` creation.
 
 Pass these parameters:
 
@@ -65,6 +64,7 @@ Completion criterion: `tmux new-window` exits 0 and a new tmux window appears wi
 ### 4. Print summary
 
 After launching, print:
+
 - Issue number and title
 - Worktree path
 - Branch name
@@ -72,5 +72,3 @@ After launching, print:
 - Agent used (detected by tmux-launch-agent)
 - Tmux window name (so the user can find it)
 - Cleanup command: `git worktree remove <worktree-path> && git worktree prune`
-
-The parent's turn ends here. The user can dispatch another issue immediately.
