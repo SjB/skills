@@ -4,8 +4,6 @@ description: Commit staged files with a conventional commit message.
 disable-model-invocation: true
 ---
 
-Commit staged files with a conventional commit message.
-
 ## Process
 
 1. **Check the staging area** — Run `git diff --cached --stat`. If empty, report "nothing staged" and stop.
