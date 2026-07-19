@@ -8,11 +8,11 @@ Architecture Decision Records live on the forge wiki and are cloned into `docs/a
 <wiki-url>
 ```
 
-Derived from the forge remote during `/setup-matt-pocock-skills`.
+Derived from the forge remote during `/setup-skills`.
 
 ## Bootstrap
 
-On first setup, `/setup-matt-pocock-skills` clones the wiki:
+On first setup, `/setup-skills` clones the wiki:
 
 ```bash
 git clone <wiki-url> docs/adr/
