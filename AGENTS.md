@@ -14,8 +14,8 @@ Skill are organized into categories based on their function. For example, `/comm
 
 If we have a skill that is only relevant to a specific agent, we can put it in an agent-specific bucket. For example, if we have a skill that is only relevant to the `opencode` agent, we can put it in `/opencode/misc`.
 
-
 ## list of categories
+
 - `engineering/` — daily code work
 - `productivity/` — daily non-code workflow tools
 - `misc/` — kept around but rarely used
@@ -36,7 +36,7 @@ Issues are tracked in Gitea on gitea.sagacity.ca. See `docs/agents/issue-tracker
 
 ### Triage labels
 
-Five-label vocabulary with default names (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix). See `docs/agents/triage-labels.md`.
+Seven-label vocabulary with default names (needs-triage, needs-info, needs-review, ready-for-agent, ready-for-human, in-progress, wontfix). See `docs/agents/triage-labels.md`.
 
 ### Domain docs
 
@@ -44,7 +44,11 @@ Single-context layout. See `docs/agents/domain.md`.
 
 ### ADR wiki
 
-Gitea wiki at git@gitea.sagacity.ca:steve/Skills.wiki.git, cloned into docs/adr/, SSH key auth. See `docs/agents/adr-wiki.md`.
+Gitea wiki at `git@gitea.sagacity.ca:steve/Skills.wiki.git`, cloned into `docs/adr/`, SSH key auth. See `docs/agents/adr-wiki.md`.
+
+## Project Context Pack
+
+Agent memory file that describes the repo's context, codebase, and navigation rules. See `.agents/project-context.md`.
 
 ### Agent CLI
 
