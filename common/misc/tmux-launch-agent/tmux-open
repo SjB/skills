@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# tmux-open — open a new tmux window (or session) and run a command
+# Usage: tmux-open [-k|--keep] [-h|--help] <window-name> <start-dir> <cmd> [args...]
+
+usage() {
+    cat <<'EOF'
+Usage: tmux-open [-k|--keep] [-h|--help] <window-name> <start-dir> <cmd> [args...]
+
+Open a new tmux window in the current session and run a command.
+If not inside tmux, create a new session named after the window and attach.
+
+Positional arguments:
+  window-name   Name for the new tmux window (and session, if creating one)
+  start-dir     Working directory for the new window
+  cmd [args...] Command to run (variadic)
+
+Options:
+  -k, --keep    After the command exits, keep the pane visible (remain-on-exit)
+                so you can inspect output. Default: pane closes when command exits.
+  -h, --help    Show this help message
+
+If `mise` is on PATH, the command runs under `mise x`.
+
+Errors:
+  - tmux not installed
+  - fewer than 3 positional args
+  - start-dir does not exist
+  - a window with the same name already exists in the current session
+EOF
+}
+
+# --- Flag parsing ---
+keep_shell=0
+while (( $# > 0 )); do
+    case "$1" in
+        -k|--keep)  keep_shell=1; shift ;;
+        -h|--help)  usage; exit 0 ;;
+        --)         shift; break ;;
+        -*)         echo "error: unknown option: $1" >&2; usage >&2; exit 1 ;;
+        *)          break ;;
+    esac
+done
+
+# --- Positional arg validation ---
+if (( $# < 3 )); then
+    echo "error: expected at least 3 positional arguments (window-name, start-dir, cmd)" >&2
+    usage >&2
+    exit 1
+fi
+
+window_name="$1"; shift
+start_dir="$1"; shift
+cmd_args=("$@")
+
+# --- Pre-flight checks ---
+if ! command -v tmux >/dev/null 2>&1; then
+    echo "error: tmux is not installed or not on PATH" >&2
+    exit 1
+fi
+
+if [[ ! -d "$start_dir" ]]; then
+    echo "error: directory does not exist: $start_dir" >&2
+    exit 1
+fi
+
+if (( ${#cmd_args[@]} == 0 )); then
+    echo "error: no command specified" >&2
+    exit 1
+fi
+
+# Duplicate window name check (only relevant inside tmux)
+if [[ -n "${TMUX:-}" ]]; then
+    if tmux list-windows -F '#{window_name}' | grep -Fxq "$window_name"; then
+        echo "error: a window named '$window_name' already exists in the current session" >&2
+        exit 1
+    fi
+fi
+
+# --- Detect mise ---
+has_mise=0
+if command -v mise >/dev/null 2>&1; then
+    has_mise=1
+fi
+
+# --- Build the command for the new window ---
+# We need to construct a single shell command string for tmux.
+# The command runs; pane closes on exit (or stays visible with --keep via remain-on-exit).
+
+# Build the inner command based on mode and mise availability
+# For argv mode, quote each argument
+quoted_args=()
+for arg in "${cmd_args[@]}"; do
+    quoted_args+=("$(printf '%q' "$arg")")
+done
+if (( has_mise )); then
+    inner_cmd="mise x -- ${quoted_args[*]}"
+else
+    inner_cmd="${quoted_args[*]}"
+fi
+
+# --- Create window or session ---
+if [[ -n "${TMUX:-}" ]]; then
+    tmux new-window -n "$window_name" -c "$start_dir" "$inner_cmd"
+    if (( keep_shell )); then
+        tmux set-option remain-on-exit on
+    fi
+else
+    tmux new-session -d -n "$window_name" -s "$window_name" -c "$start_dir" "$inner_cmd"
+    if (( keep_shell )); then
+        tmux set-option -t "$window_name" remain-on-exit on
+    fi
+    tmux attach-session -t "$window_name"
+fi
