@@ -8,7 +8,7 @@ Issues and PRDs for this repo live as Gitea issues. Use the `tea` CLI for all op
 - **Read an issue**: `tea issue <number> --comments`. Use `-o json` for machine-readable output.
 - **List issues**: `tea issue list --state open -o json` with appropriate `--labels` and `--state` filters. 
 - **Comment on an issue**: `tea comment <number> "..."`.
-- **Apply / remove labels**: `tea issue edit <number> --add-label "..."` / `--remove-label "..."`. Multiple labels can be comma-separated or by repeating the flag.
+- **Apply / remove labels**: `tea issue edit <number> --add-label "..."` / `--remove-label "..."`. Multiple labels can be comma-separated or by repeating the flag. Labels need to be created first with `tea label create --name "..." --color "..."`.
 - **Close**: `tea issue close <number>`. `tea issue close` does not accept a closing comment, so post the explanation first with `tea comment <number> "..."`, then close.
 
 Infer the repo from git remote -v — `tea` does this automatically when run inside a clone.
