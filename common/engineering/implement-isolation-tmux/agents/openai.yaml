@@ -1,0 +1,5 @@
+interface:
+  display_name: "Implement Isolation Tmux"
+  short_description: "Implement isolation using tmux for the agent"
+policy:
+  allow_implicit_invocation: false

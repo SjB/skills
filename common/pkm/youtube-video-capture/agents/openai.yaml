@@ -1,0 +1,5 @@
+interface:
+  display_name: "Youtube Video Capture"
+  short_description: "Capture a youtube video"
+policy:
+  allow_implicit_invocation: false

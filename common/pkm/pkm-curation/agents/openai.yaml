@@ -1,0 +1,5 @@
+interface:
+  display_name: "Personal Knowledge Management Curation"
+  short_description: "Curate and manage personal knowledge for the agent"
+policy:
+  allow_implicit_invocation: false

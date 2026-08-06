@@ -1,0 +1,5 @@
+interface:
+  display_name: "Agent Handoff"
+  short_description: "Handoff the agent to a human operator"
+policy:
+  allow_implicit_invocation: false

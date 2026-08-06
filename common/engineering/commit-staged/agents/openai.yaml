@@ -1,0 +1,5 @@
+interface:
+  display_name: "Commit Staged"
+  short_description: "Commit staged changes to the repository"
+policy:
+  allow_implicit_invocation: false

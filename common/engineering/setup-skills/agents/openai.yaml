@@ -1,0 +1,5 @@
+interface:
+  display_name: "Setup Engineering Skills"
+  short_description: "Setup engineering skills for the agent"
+policy:
+  allow_implicit_invocation: false

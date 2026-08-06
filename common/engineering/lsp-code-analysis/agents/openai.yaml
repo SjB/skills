@@ -1,0 +1,5 @@
+interface:
+  display_name: "LSP Code Analysis"
+  short_description: "Analyze code using LSP"
+policy:
+  allow_implicit_invocation: true

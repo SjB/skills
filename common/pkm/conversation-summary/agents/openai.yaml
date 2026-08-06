@@ -1,0 +1,5 @@
+interface:
+  display_name: "Conversation Summary"
+  short_description: "Summarize the conversation"
+policy:
+  allow_implicit_invocation: false

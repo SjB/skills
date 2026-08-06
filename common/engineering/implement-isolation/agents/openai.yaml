@@ -1,0 +1,5 @@
+interface:
+  display_name: "Implement Isolation"
+  short_description: "Implement isolation for the agent"
+policy:
+  allow_implicit_invocation: false

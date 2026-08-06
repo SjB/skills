@@ -1,0 +1,5 @@
+interface:
+  display_name: "Tmux Launch Agent"
+  short_description: "Launch an agent in a new tmux session"
+policy:
+  allow_implicit_invocation: false

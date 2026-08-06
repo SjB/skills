@@ -1,0 +1,5 @@
+interface:
+  display_name: "Knowledge Gardener"
+  short_description: "Manage and curate knowledge for the agent"
+policy:
+  allow_implicit_invocation: false

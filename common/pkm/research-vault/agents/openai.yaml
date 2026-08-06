@@ -1,0 +1,5 @@
+interface:
+  display_name: "Research Vault"
+  short_description: "Store and retrieve research notes and documents"
+policy:
+  allow_implicit_invocation: false

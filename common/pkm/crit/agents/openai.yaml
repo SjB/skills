@@ -1,0 +1,5 @@
+interface:
+  display_name: "Context Role Interview Task"
+  short_description: "CRIT framework is a structured prompting and interaction methodology"
+policy:
+  allow_implicit_invocation: false

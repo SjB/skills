@@ -1,0 +1,5 @@
+interface:
+  display_name: "Project Context Pack"
+  short_description: "Provides context about the project to the agent"
+policy:
+  allow_implicit_invocation: false
