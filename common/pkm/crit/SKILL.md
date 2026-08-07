@@ -1,90 +1,67 @@
 ---
 name: crit
-description: brainstorm with AI using the CRIT framework to generate and evaluate ideas.
+description: Run the CRIT framework — give the AI Context, assign it a Role, let it Interview you one question at a time, then issue the Task.
 disable-model-invocation: true
 ---
 
 ## Purpose
 
-This skill implements the CRIT (Context-Request-Ideation-Tone) framework for structured brainstorming and idea evaluation.
+CRIT is a four-step prompt framework by Geoff Woods: **Context, Role, Interview,
+Task**. The sequence front-loads thinking before execution — the AI learns your
+world, takes a specific lens, interviews you to surface what matters, then acts.
 
-## Core Workflow
+The insight: most people skip to Task and get generic output. The Interview
+step — one question at a time, max three — is where the signal lives.
 
-### Step 1: Context Analysis
-Before generating ideas, establish the foundation:
+## Steps
 
-1. **Identify the Core Domain**
-   - What field, industry, or subject area?
-   - What are the key constraints (time, resources, technical limitations)?
-   - Who is the target audience and their expertise level?
+Run these four steps in order when the user invokes `/crit`.
 
-2. **Assess Current State**
-   - What problems or opportunities exist?
-   - What has been tried before (if applicable)?
-   - What resources are available?
+### 1. Context — Give the AI your world
 
-**Completion Criterion**: Domain, constraints, and current state captured in a compact summary (3-5 sentences).
+Ask the user: "What should I know about you, your goals, your audience, and any
+constraints?"
 
-### Step 2: Request Clarification
-Structure the brainstorming request:
+Capture the answer in one paragraph. More detail is better.
 
-1. **Define the Specific Goal**
-   - What concrete outcome do you want?
-   - What success criteria will be used?
-   - What is the expected timeline?
+**Completion criterion**: One paragraph covering identity, goal, audience, and
+constraints — confirmed by the user.
 
-2. **Gather Input Requirements**
-   - What information is needed to proceed?
-   - What assumptions should be validated?
-   - What data or resources are required?
+### 2. Role — Assign a viewpoint
 
-**Completion Criterion**: Goal and input requirements captured as 1-3 concrete statements, each with a checkable success criterion.
+Ask the user: "What role should I take?"
 
-### Step 3: Ideation
-Generate diverse, high-quality ideas:
+Guide toward a specific lens — "strategy coach who uncovers blind spots,"
+"editor who cuts fluff," "architect who finds leverage points." Not "be
+helpful."
 
-1. **Divergent Thinking Phase**
-   - Generate 5-10 initial concepts without judgment
-   - Apply different perspectives (technical, business, user experience)
-   - Include both obvious and unconventional options
+**Completion criterion**: A single sentence assigning a named role that implies
+a specific viewpoint.
 
-2. **Convergent Analysis Phase**
-   - Evaluate each idea against success criteria
-   - Score ideas on feasibility, impact, and alignment
-   - Identify patterns and synergies between ideas
+### 3. Interview — One question at a time
 
-**Completion Criterion**: Minimum 5 distinct ideas generated and evaluated with scores.
+Instruct yourself: "Ask me no more than three questions, one at a time, to
+clarify what I'm trying to achieve."
 
-### Step 4: Iterative Refinement
-Improve selected ideas:
+Ask one question. Wait for the answer. Then ask the next. Max three. Do not
+batch them.
 
-1. **Select Top Candidates**
-   - Choose 2-3 ideas with highest potential
-   - Detail implementation approach for each
-   - Identify risks and mitigation strategies
+This step forces the user to slow down and think, and teaches the AI what
+actually matters.
 
-2. **Develop Action Plans**
-   - Break down into concrete steps
-   - Assign priorities and dependencies
-   - Define success metrics and checkpoints
+**Completion criterion**: 1-3 questions asked and answered, one at a time.
+Stop asking when the user signals readiness or you've asked three.
 
-**Completion Criterion**: 2-3 refined ideas with detailed action plans.
+### 4. Task — Issue the assignment
 
-### Step 5: Tone & Delivery
-Adapt communication to the audience:
+Ask the user: "What's the task?"
 
-1. **Choose Appropriate Role**
-   - Subject Matter Expert for technical depth
-   - Consultant for strategic guidance
-   - Teacher for complex concepts
-   - Collaborator for co-creation
-   - Analyst for multi-perspective evaluation
+Guide toward a short, clear, slightly uncomfortable prompt that asks the AI to
+*think*, not just write. Reference the preceding interview.
 
-2. **Structure Response**
-   - Lead with clear, actionable solutions
-   - Organize information logically and concisely
-   - Include examples or analogies for clarity
-   - Suggest next steps and follow-up questions
+> "Based on our conversation, give me three non-obvious actions I can take.
+> Make them surprising but realistic."
 
-**Completion Criterion**: Response delivered in chosen role with sections clearly labeled (Context, Request, Ideation, Refinement, Next Steps).
+Execute the task.
 
+**Completion criterion**: Task executed and result delivered to the user.

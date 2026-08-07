@@ -7,7 +7,7 @@ Agent skills (slash commands and behaviors) loaded into my agent.
 - [agent-handoff](common/in-progress/agent-handoff/SKILL.md) — Hand the current conversation off to a fresh background agent that picks up the work immediately.
 - [commit-staged](common/engineering/commit-staged/SKILL.md) — Commit staged files with a conventional commit message.
 - [conversation-summary](common/pkm/conversation-summary/SKILL.md) — Save the current conversation as a comprehensive report note in your Obsidian vault, following OKF v0.1 conventions.
-- [crit](common/pkm/crit/SKILL.md) — Brainstorm with AI using the CRIT framework to generate and evaluate ideas.
+- [crit](common/pkm/crit/SKILL.md) — Run the CRIT framework — give the AI Context, assign it a Role, let it Interview you one question at a time, then issue the Task.
 - [implement-isolation](common/engineering/implement-isolation/SKILL.md) — Implement a piece of work based on a spec or set of tickets in isolation.
 - [implement-isolation-tmux](common/engineering/implement-isolation-tmux/SKILL.md) — Dispatch a child agent in an isolated git worktree to implement a piece of work based on a PRD or set of issues.
 - [knowledge-gardener](common/in-progress/knowledge-gardener/SKILL.md) — Run vault-aware semantic search, synthesis, note creation, linking, and Zettelkasten workflows for this Obsidian vault.
