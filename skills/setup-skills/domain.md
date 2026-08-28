@@ -43,7 +43,7 @@ Multi-context repo (presence of `CONTEXT-MAP.md` at the root):
 
 ## ADR lifecycle
 
-ADRs live on the forge wiki and are cloned into `docs/adr/` during setup (`/setup-matt-pocock-skills`). The source repo ignores `docs/adr/` via `.gitignore`.
+ADRs live on the forge wiki and are cloned into `docs/adr/` during setup (`setup-skills`). The source repo ignores `docs/adr/` via `.gitignore`.
 
 - **Reading** — skills read ADRs by relative path (`docs/adr/...`) as before. The wiki clone is transparent.
 - **Creating / updating** — skills write ADRs to `docs/adr/` as files. Changes accumulate in the wiki clone's local git state.
