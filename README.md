@@ -15,6 +15,7 @@ Skills are grouped by invocation type. [User-invoked](docs/invocation.md) skills
 - [implement-isolation-tmux](skills/engineering/implement-isolation-tmux/SKILL.md) — Dispatch an isolated worktree agent to implement work from a PRD or issues.
 - [improve-codebase-architecture](skills/engineering/improve-codebase-architecture/SKILL.md) — Find and work through opportunities to deepen a codebase's architecture.
 - [project-context-pack](skills/engineering/project-context-pack/SKILL.md) — Build a bounded project context pack for later agent work.
+- [recipe-diagrams](skills/engineering/recipe-diagrams/SKILL.md) — Convert recipes into high-resolution process-flow diagrams.
 - [setup-skills](skills/setup-skills/SKILL.md) — Configure engineering skills, issue tracking, triage labels, and domain docs.
 - [to-spec](skills/engineering/to-spec/SKILL.md) — Turn the current conversation into a spec and publish it to the issue tracker.
 - [to-tickets](skills/engineering/to-tickets/SKILL.md) — Break a plan or spec into tracer-bullet tickets with dependencies.
@@ -29,7 +30,9 @@ Skills are grouped by invocation type. [User-invoked](docs/invocation.md) skills
 ### Miscellaneous
 
 - [bro](skills/misc/bro/SKILL.md) — Restate the last message in plain human language.
+- [show-me](skills/misc/show-me/SKILL.md) — Help explain topics visually with concise diagrams and artifacts.
 - [tmux-launch-agent](skills/misc/tmux-launch-agent/SKILL.md) — Fork a new agent CLI session into a new tmux window.
+- [visual-verification](skills/misc/visual-verification/SKILL.md) — Verify running desktop UI changes with screenshots and recordings.
 
 ### PKM
 
@@ -74,6 +77,8 @@ No user-invoked skills.
 - [resolving-merge-conflicts](skills/engineering/resolving-merge-conflicts/SKILL.md) — Resolve an in-progress Git merge or rebase conflict.
 - [tdd](skills/engineering/tdd/SKILL.md) — Use test-driven development for features, bugs, and integration tests.
 - [wizard](skills/engineering/wizard/SKILL.md) — Generate an interactive wizard for steps only a human can perform.
+- [worktrees](skills/engineering/worktrees/SKILL.md) — Manage Git worktrees in a canonical repository root.
+- [write-discoverable-code](skills/engineering/write-discoverable-code/SKILL.md) — Write code agents and humans can find through plain-text search.
 
 ### Miscellaneous
 

@@ -5,7 +5,9 @@ Kept around but rarely used.
 ## User-invoked
 
 - [bro](bro/SKILL.md) — Restate the last message in plain human language.
+- [show-me](show-me/SKILL.md) — Help explain topics visually with concise diagrams and artifacts.
 - [tmux-launch-agent](tmux-launch-agent/SKILL.md) — Fork a new agent CLI session into a new tmux window.
+- [visual-verification](visual-verification/SKILL.md) — Verify running desktop UI changes with screenshots and recordings.
 
 ## Model-invoked
 
