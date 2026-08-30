@@ -1,5 +1,5 @@
 interface:
-  display_name: "Development Workflow"
+  display_name: "Implementation Orchestrator"
   short_description: "Implements ready-for-agent tracker tickets through isolated worktrees"
 policy:
   allow_implicit_invocation: false

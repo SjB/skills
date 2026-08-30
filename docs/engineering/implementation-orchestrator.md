@@ -1,6 +1,6 @@
-# Pi development workflow skill
+# Pi implementation orchestrator skill
 
-`dev-workflow` implements already-planned tracker tickets from issue selection through isolated implementation worktrees, pull/merge requests, review, merge, and cleanup.
+`implementation-orchestrator` implements already-planned tracker tickets from issue selection through isolated implementation worktrees, pull/merge requests, review, merge, and cleanup.
 
 It supports:
 
@@ -40,10 +40,10 @@ Invoke it with an optional ticket ID or URL:
 
 ```text
 # Process only ticket 43
-/skill:dev-workflow 43
+/skill:implementation-orchestrator 43
 
 # Process all available tickets in the current repository
-/skill:dev-workflow
+/skill:implementation-orchestrator
 ```
 
 The ID must be a tracker issue/ticket, not a branch name, PR/MR ID, or session ID. With an ID, only that ticket is processed. With no ID, the skill considers all open tickets in the current repository.

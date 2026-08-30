@@ -1,10 +1,10 @@
 ---
-name: dev-workflow
+name: implementation-orchestrator
 description: Implements ready-for-agent tracker tickets through isolated worktrees, pull requests, review, conflict resolution, and merge. Use after wayfinder and planning have produced tickets, with or without a ticket ID/URL; no ticket ID/URL means process available tickets. Does not create planning tickets.
 disable-model-invocation: true
 ---
 
-# Development workflow
+# Implementation orchestrator
 
 Use this skill only after the human-led wayfinder, plan, spec, and ticket phases. **A tracker ticket ID or URL is optional. Without one, process all eligible open tickets in the current repository.** With an argument, process only that ticket. An ID means the forge's issue/ticket identifier, not a branch, session, or PR ID.
 
