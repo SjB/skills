@@ -1,12 +1,12 @@
 ---
 name: dev-workflow
-description: Implements ready-for-agent tracker tickets through isolated worktrees, pull requests, review, conflict resolution, and merge. Use after wayfinder and planning have produced tickets, when the user gives a ticket ID, asks to process available tickets, or asks to run the development workflow. Does not create planning tickets.
+description: Implements ready-for-agent tracker tickets through isolated worktrees, pull requests, review, conflict resolution, and merge. Use after wayfinder and planning have produced tickets, with or without a ticket ID/URL; no ticket ID/URL means process available tickets. Does not create planning tickets.
 disable-model-invocation: true
 ---
 
 # Development workflow
 
-Use this skill only after the human-led wayfinder, plan, spec, and ticket phases. The optional argument is a **tracker ticket ID or URL**. With an argument, process only that ticket. With no argument, scope the run to all open tickets in the current repository. An ID means the forge's issue/ticket identifier, not a branch, session, or PR ID.
+Use this skill only after the human-led wayfinder, plan, spec, and ticket phases. **A tracker ticket ID or URL is optional. Without one, process all eligible open tickets in the current repository.** With an argument, process only that ticket. An ID means the forge's issue/ticket identifier, not a branch, session, or PR ID.
 
 ## Compose before acting
 
