@@ -34,6 +34,11 @@ Skills are grouped by invocation type. [User-invoked](docs/invocation.md) skills
 - [tmux-launch-agent](skills/misc/tmux-launch-agent/SKILL.md) — Fork a new agent CLI session into a new tmux window.
 - [visual-verification](skills/misc/visual-verification/SKILL.md) — Verify running desktop UI changes with screenshots and recordings.
 
+### Personal
+
+- [arch-maintenance](skills/personal/arch-maintenance/SKILL.md) — Keep an Arch/CachyOS system updated and healthy with status, check, and update workflows.
+- [arch-troubleshooting](skills/personal/arch-troubleshooting/SKILL.md) — Diagnose and repair Arch/CachyOS system problems.
+
 ### PKM
 
 - [conversation-summary](skills/pkm/conversation-summary/SKILL.md) — Save the current conversation as a report note in an Obsidian vault.
