@@ -13,6 +13,15 @@ Issues and PRDs for this repo live as Gitea issues. Use the `tea` CLI for all op
 
 Infer the repo from git remote -v — `tea` does this automatically when run inside a clone.
 
+### Forge write safety
+
+   - `tea --description` does not read stdin via `@-`; never use `--description @-`.
+   - Pass multiline descriptions with shell command substitution:
+     `tea issue create --description "$(cat <<'EOF' ... EOF)"`
+   - After every issue create/edit, verify:
+     `tea issue <n> -o json | jq -e '.body != "" and .body != "@-" and (.body | contains("## Question"))'`
+   - Inspect `tea --help` before relying on CLI syntax.
+
 ## Pull requests as a triage surface
 
 **PRs as a request surface: no.** _(Set to `yes` if this repo treats external PRs as feature requests; `/triage` reads this flag.)_
