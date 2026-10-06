@@ -1,0 +1,5 @@
+interface:
+  display_name: "Arch Troubleshooting"
+  short_description: "Diagnose and repair Arch and CachyOS problems"
+policy:
+  allow_implicit_invocation: false

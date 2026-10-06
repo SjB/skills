@@ -1,0 +1,5 @@
+interface:
+  display_name: "Dual Review"
+  short_description: "Parallel correctness, security, and maintainability review"
+policy:
+  allow_implicit_invocation: false

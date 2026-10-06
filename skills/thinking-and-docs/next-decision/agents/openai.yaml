@@ -1,0 +1,5 @@
+interface:
+  display_name: "Next Decision"
+  short_description: "Drill the next open decision with choices and a recommendation"
+policy:
+  allow_implicit_invocation: false

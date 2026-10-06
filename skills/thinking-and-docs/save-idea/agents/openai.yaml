@@ -1,0 +1,5 @@
+interface:
+  display_name: "Save Idea"
+  short_description: "Capture video and podcast ideas in the content backlog"
+policy:
+  allow_implicit_invocation: false

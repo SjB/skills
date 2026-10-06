@@ -1,0 +1,5 @@
+interface:
+  display_name: "Why"
+  short_description: "Investigate code rationale using historical evidence"
+policy:
+  allow_implicit_invocation: false

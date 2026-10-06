@@ -1,0 +1,5 @@
+interface:
+  display_name: "Arch Maintenance"
+  short_description: "Keep Arch and CachyOS systems updated and healthy"
+policy:
+  allow_implicit_invocation: false

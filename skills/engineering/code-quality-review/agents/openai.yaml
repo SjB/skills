@@ -1,0 +1,5 @@
+interface:
+  display_name: "Thermo-Nuclear Code Quality Review"
+  short_description: "Strict review of abstractions, large files, and condition complexity"
+policy:
+  allow_implicit_invocation: false

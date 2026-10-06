@@ -1,0 +1,5 @@
+interface:
+  display_name: "Interrogate"
+  short_description: "Challenge code and plans with independent reviews"
+policy:
+  allow_implicit_invocation: false

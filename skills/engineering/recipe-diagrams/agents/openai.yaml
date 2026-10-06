@@ -1,0 +1,5 @@
+interface:
+  display_name: "Recipe Diagrams"
+  short_description: "Turn recipes into process-flow diagrams"
+policy:
+  allow_implicit_invocation: false

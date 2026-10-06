@@ -1,0 +1,5 @@
+interface:
+  display_name: "Agent Skills: A Complete Guide"
+  short_description: "Write and improve effective agent skills"
+policy:
+  allow_implicit_invocation: false

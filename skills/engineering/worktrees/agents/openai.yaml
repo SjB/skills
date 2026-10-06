@@ -1,0 +1,5 @@
+interface:
+  display_name: "Git Worktrees"
+  short_description: "Manage worktrees under a canonical repository root"
+policy:
+  allow_implicit_invocation: false

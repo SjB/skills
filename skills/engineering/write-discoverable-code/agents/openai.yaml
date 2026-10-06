@@ -1,0 +1,5 @@
+interface:
+  display_name: "Write Discoverable Code"
+  short_description: "Write searchable identifiers, comments, and file names"
+policy:
+  allow_implicit_invocation: false

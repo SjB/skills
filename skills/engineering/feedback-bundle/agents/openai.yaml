@@ -1,0 +1,5 @@
+interface:
+  display_name: "Feedback Bundle"
+  short_description: "File Gitea issues with commit links and attached evidence"
+policy:
+  allow_implicit_invocation: false

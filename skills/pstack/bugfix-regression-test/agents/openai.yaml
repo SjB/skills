@@ -1,0 +1,5 @@
+interface:
+  display_name: "Bug-Fix Regression Test"
+  short_description: "Fix bugs test-first with focused regression tests"
+policy:
+  allow_implicit_invocation: false

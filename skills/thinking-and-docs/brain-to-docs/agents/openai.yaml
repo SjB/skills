@@ -1,0 +1,5 @@
+interface:
+  display_name: "Brain to Docs"
+  short_description: "Extract project vision and decisions into README and ADRs"
+policy:
+  allow_implicit_invocation: false

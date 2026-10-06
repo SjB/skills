@@ -1,0 +1,5 @@
+interface:
+  display_name: "Security Audit Skill"
+  short_description: "Audit diffs for security and correctness risks"
+policy:
+  allow_implicit_invocation: false
