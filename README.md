@@ -7,6 +7,7 @@ Skills are grouped by invocation type. [User-invoked](docs/invocation.md) skills
 # Credits
 Many of these skills were created or originated by the following people and organizations:
 - [mattpocock](http://mattpocock.com)
+- [poteto](https://github.com/poteto?tab=repositories)
 
 ## User-invoked
 
