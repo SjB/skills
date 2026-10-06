@@ -22,6 +22,7 @@ Daily code work.
 
 ## Model-invoked
 
+- [feedback-bundle](feedback-bundle/SKILL.md) — Post a Gitea feedback issue linked to the current commit and attach logs or screenshots. Use when the user reports a problem and asks to file it with evidence, open a bug ticket, or says “feedback-bundle” or “attach the log.”
 - [code-review](code-review/SKILL.md) — Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".
 - [codebase-design](codebase-design/SKILL.md) — Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.
 - [diagnosing-bugs](diagnosing-bugs/SKILL.md) — Diagnosis loop for hard bugs and performance regressions. Use when the user says "diagnose"/"debug this", or reports something broken/throwing/failing/slow.
