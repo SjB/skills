@@ -1,6 +1,6 @@
 ---
 name: orchestrate-herdr
-description: "Drive a plan from the current conversation or an @file through a published spec, linked dependency-aware tickets, and one-at-a-time isolated implementation to a merged PR, using Herdr and Pi agents with no Bun CLI or orchestration runtime. Use only when explicitly invoked, e.g. /orchestrate-herdr <goal> or /orchestrate-herdr @file. Composes to-spec, to-tickets, dual-review, code-review, worktrees, and forge-cli."
+description: "Drive a plan from context or @file through a published spec, linked tickets, and one-at-a-time isolated implementation to a merged PR using Herdr and Pi agents."
 disable-model-invocation: true
 ---
 
