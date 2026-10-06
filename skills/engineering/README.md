@@ -10,6 +10,7 @@ Daily code work.
 - [implement-isolation](implement-isolation/SKILL.md) — Implement a piece of work from a spec or set of tickets in isolation.
 - [implement-isolation-tmux](implement-isolation-tmux/SKILL.md) — Dispatch an isolated worktree agent to implement work from a PRD or issues.
 - [improve-codebase-architecture](improve-codebase-architecture/SKILL.md) — Find and work through opportunities to deepen a codebase's architecture.
+- [orchestrate-herdr](orchestrate-herdr/SKILL.md) — Drive a plan from context or @file through a published spec, linked tickets, and one-at-a-time isolated implementation to a merged PR using Herdr and Pi agents.
 - [project-context-pack](project-context-pack/SKILL.md) — Build a bounded project context pack for later agent work.
 - [recipe-diagrams](recipe-diagrams/SKILL.md) — Convert recipes into high-resolution process-flow diagrams.
 - [setup-skills](../setup-skills/SKILL.md) — Configure engineering skills, issue tracking, triage labels, and domain docs.
@@ -22,6 +23,7 @@ Daily code work.
 
 - [code-review](code-review/SKILL.md) — Review changes against repository standards and the originating specification.
 - [codebase-design](codebase-design/SKILL.md) — Design and improve deep module interfaces and seams.
+- [dual-review](dual-review/SKILL.md) — Run parallel correctness/security and maintainability reviews of a branch diff, then synthesize findings.
 - [diagnosing-bugs](diagnosing-bugs/SKILL.md) — Diagnose hard bugs and performance regressions.
 - [domain-modeling](domain-modeling/SKILL.md) — Build and sharpen a project's domain model.
 - [lsp-code-analysis](lsp-code-analysis/SKILL.md) — Navigate code and analyze it semantically with LSP.
