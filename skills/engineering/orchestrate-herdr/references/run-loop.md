@@ -30,7 +30,7 @@ Each implementer gets the full ticket and acceptance criteria, relevant context 
 - merge the latest integration branch into its task branch before reporting done;
 - report changed files, commit, checks, and any blockers; do not merge to the integration branch or open a PR.
 
-When an implementer finishes, have a **new independent reviewer agent** run the `code-review` skill against that task branch, using the current integration branch as the base. Resolve all actionable findings in a fresh scoped fix agent and rerun the review until clear. Only then use a fresh merger agent to merge the task branch into the integration branch. Verify the merge and update tracker state before dispatching newly unblocked tickets. Reconcile uncertain Git or tracker outcomes before retrying.
+When an implementer finishes, have a **new independent reviewer agent** run the `code-review`, `security-audit` and `code-quality-review` skill against that task branch, using the current integration branch as the base. Resolve all actionable findings in a fresh scoped fix agent and rerun the review until clear. Only then use a fresh merger agent to merge the task branch into the integration branch. Verify the merge and update tracker state before dispatching newly unblocked tickets. Reconcile uncertain Git or tracker outcomes before retrying.
 
 ## 3. Final review and completion
 
