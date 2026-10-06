@@ -4,6 +4,10 @@ Agent skills (slash commands and behaviors) loaded into AI coding agents.
 
 Skills are grouped by invocation type. [User-invoked](docs/invocation.md) skills run only when a person invokes them; model-invoked skills can also be selected automatically.
 
+# Credits
+Many of these skills were created or originated by the following people and organizations:
+- [mattpocock](http://mattpocock.com)
+
 ## User-invoked
 
 ### Engineering
