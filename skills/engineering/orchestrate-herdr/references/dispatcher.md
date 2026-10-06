@@ -1,45 +1,26 @@
-# Dispatcher: select and validate the worker node
+# Dispatcher: resolve the worker and start fresh
 
-The dispatcher is one-shot. It selects the worker node, discovers and validates Herdr state, and kicks off the planner. It does not run the loop afterward.
+Invocation is `/skill:orchestrate-herdr <spec-ticket> [worker]` (for example, `/skill:orchestrate-herdr 32 obelix`). The spec ticket is required; the worker is optional. If the worker is omitted or blank, use the current local worker and spawn the agent there. If a worker is named, resolve it from `herdr machine list`; if it is missing or ambiguous, stop and ask. Do not silently select a different worker.
 
-## Local vs remote
+Always start a **new agent** for this orchestration and each dispatched task. Never reuse or resume an existing agent, even if one appears idle or already in the right repository.
 
-- **Local worker node** — the orchestrator system is the worker node. Use the current repository checkout. Skip the Herdr discovery below and run the planner in this session.
-- **Remote worker node** — the user names another machine. Discover its Herdr session, workspace, and pane, confirm the repository/ref, then start the planner there.
+## Validate the target
 
-If the user did not select a node and the environment does not make it obvious, ask. Do not default to a guess.
+1. For a named worker, run `herdr machine list` and match it to an available saved machine. Use that exact label or ID with `herdr --machine <worker> ...`; do not treat arbitrary SSH hostnames as valid machine selectors. For the default local worker, stay on the current worker and spawn the agent locally.
+2. For a named worker, confirm the machine is reachable; for the default local worker, inspect the current local Herdr session. In either case, inspect workspaces, panes, and agents. Discover the target repository and ref; do not guess pane IDs, repo paths, or agent kinds.
+3. Confirm the spec ticket exists on the target repository's tracker and is the parent/spec ticket. The new planner must read the spec, linked tickets, and relevant comments before creating work.
+4. Confirm the target has this skill, Pi, Git, repository credentials, and an authenticated forge CLI (run the `forge-cli` preflight). Stop with actionable guidance if not.
 
-## Preconditions
+Run `herdr --skill` to discover the installed Herdr skills and follow the relevant skill for CLI workflows; use CLI help for exact command syntax. Machine commands require a configured, enabled machine profile and a reachable, API-compatible Herdr server. A connection failure does not prove a mutation failed; inspect remote state before retrying.
 
-- Check Herdr access on the node: `HERDR_ENV=1`, `HERDR_WORKSPACE_ID`, and that the `herdr` CLI can reach the same named session.
-- Resolve the explicit session from `HERDR_SESSION`; if unset, inspect `herdr session list` and ask if more than one plausible session exists. Pass `--session <name>` to every Herdr command; the environment variable alone can fall back to another server.
-- Confirm the node has this skill discoverable, plus Git and a working forge CLI (run the `forge-cli` preflight). If not, explain the setup needed; do not dispatch to an unprepared shell.
+## Start a new planner
 
-## Discover, do not guess
+Choose a pane in the target repository only as the source for creating a **new sibling pane**. Do not send work to any existing agent pane. Create the new pane with the confirmed repository working directory, read its returned pane ID, then start a fresh Pi agent there using the installed agent kind. If there is no suitable source pane or no available shell in the new pane, stop rather than commandeering an unrelated pane.
 
-Never infer a pane ID, an agent status, or a repository path. Discover and inspect them first. Do not close, rename, move, or reconfigure unrelated panes.
+Submit the exact invocation to that new agent, using the spec ticket and resolved worker (omit the worker when using the current local worker):
 
-```bash
-herdr --session "$SESSION" session list
-herdr --session "$SESSION" pane list --workspace "$HERDR_WORKSPACE_ID"
-herdr --session "$SESSION" pane read <pane-id> --source recent-unwrapped --lines 200
+```text
+/skill:orchestrate-herdr <spec-ticket> [worker]
 ```
 
-Before dispatching, confirm the target pane is the intended remote Pi pane and that its repository/ref is correct. Inspect the exact target and repository/ref before dispatch — work starts in the intended environment, never a guessed one.
-
-## Kick off the planner
-
-Confirm the node has `orchestrate-herdr` available. If not, stop and explain that this skill must be installed or discoverable in the remote Pi session.
-
-Send the root kickoff as a separate text action followed by Enter; a TUI paste burst can swallow Enter. Use the exact pane ID returned by Herdr, never a guessed ID.
-
-```bash
-herdr --session "$SESSION" pane send-text <pane-id> "/skill:orchestrate-herdr You are the root planner for: <goal>"
-# After the text is present in the pane:
-herdr --session "$SESSION" pane send-keys <pane-id> enter
-herdr --session "$SESSION" agent wait <pane-id> --until working --timeout 120000
-```
-
-If the text was not submitted, inspect the pane and dismiss any slash-command popup with `escape`; do not blindly resend and create duplicate runs. Never claim kickoff succeeded on changed pane text alone: confirm native status became `working`.
-
-Wait for Herdr's native `working` status, then report the root pane/session and stop. Do not wait for the whole orchestration tree.
+Confirm the fresh agent reaches `working` before reporting kickoff success. If startup or submission is uncertain, inspect that new pane/agent before retrying; do not create a duplicate agent blindly. Once the planner is working, report the worker, spec ticket, and new agent/pane, then stop monitoring the full workflow.
