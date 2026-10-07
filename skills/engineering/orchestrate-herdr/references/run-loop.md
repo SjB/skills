@@ -25,7 +25,7 @@ All agent communication and handoffs go through tracker or PR comments; `.orches
 
 ## 2. Implement the frontier
 
-For each open, unblocked ticket, start a **new implementer agent** in its own worktree and branch. Independent frontier tickets may run concurrently; never parallel-write a shared checkout. Start a fresh merger agent for each merge.
+For each open, unblocked ticket, start a **new worker subagent** in its own worktree and branch. Independent frontier tickets may run concurrently; never parallel-write a shared checkout. Start a fresh merger agent for each merge.
 
 Start each implementer with its role, task-issue URL, worktree path, and starting branch; the issue itself holds scope and acceptance criteria. Put any later clarification or handoff in tracker/PR comments, not agent-to-agent chat. Require the implementer to:
 
@@ -35,11 +35,11 @@ Start each implementer with its role, task-issue URL, worktree path, and startin
 - merge the latest integration branch into its task branch before reporting done;
 - post its handoff on the task issue; do not merge to the integration branch or open a PR.
 
-When an implementer finishes, have a **new independent reviewer agent** run the `code-review`, `security-audit`, and `code-quality-review` skills against that task branch, using the current integration branch as the base. Put review discussion on the PR and summarize its outcome on the task issue. Resolve actionable findings in a fresh scoped fix agent and rerun review until clear. Only then use a fresh merger agent to merge the task branch into the integration branch. Verify the merge and update tracker state before dispatching newly unblocked tickets. Reconcile uncertain Git or tracker outcomes before retrying.
+When an implementer finishes, have a **parallel reviewers subagent** run the `code-review`, `security-audit`, and `code-quality-review` skills against that task branch, using the current integration branch as the base. Put review discussion on the PR and summarize its outcome on the task issue. Resolve actionable findings in a fresh scoped fix agent and rerun review until clear. Only then use a fresh merger agent to merge the task branch into the integration branch. Verify the merge and update tracker state before dispatching newly unblocked tickets. Reconcile uncertain Git or tracker outcomes before retrying.
 
 ## 3. Final review and completion
 
-After all tickets are implemented and merged, run `code-review` against the entire integration branch as a final integration review. Have a fresh implementer fix actionable findings in a scoped worktree; merge the fixes and rerun review until clear. Do not report completion until this review is clear and final checks pass; do not merge around unresolved findings or failed checks.
+After all tickets are implemented and merged, have a **reviewer subagent** run `code-review` against the entire integration branch as a final integration review. Have a fresh implementer fix actionable findings in a scoped worktree; merge the fixes and rerun review until clear. Do not report completion until this review is clear and final checks pass; do not merge around unresolved findings or failed checks.
 
 If a draft PR exists, mark it ready for review after final checks. Otherwise, resolve each ticket according to tracker close semantics and report the integration branch. Close the parent spec ticket only when all work is complete, verified, and merged. As part of closing it, remove the `in-progress` label. Clean only confirmed-clean implementer worktrees; retain unresolved work and the worker-side run log.
 
