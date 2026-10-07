@@ -42,6 +42,7 @@ Show the complete Accepted / Rejected / Backlog output and wait for explicit use
 
 For each approved item, follow its Routing field:
 
+- Package-installed skill (for example under `node_modules` or a marketplace directory): do not edit it — the change is lost on update. Route the lesson to project-level config or a project skill, or report it as a backlog item instead.
 - Trivial edit to an existing skill: edit it directly.
 - Substantive edit to an existing skill: use the harness's established skill-authoring workflow, if available; otherwise draft and validate the smallest clear change.
 - Description needs tuning: improve the target skill's routing description using its supported metadata format.
