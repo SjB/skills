@@ -1,5 +1,5 @@
 interface:
-  display_name: "Orchestrate plans to merged PRs with Herdr"
-  short_description: "Drive planned work from context through tickets to a merged PR"
+  display_name: "Start or monitor a spec with Herdr"
+  short_description: "Start or monitor its planner; completion is parent-ticket closure"
 policy:
   allow_implicit_invocation: false

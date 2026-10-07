@@ -1,48 +1,33 @@
-# State, recovery, and cleanup
+# Worker-side run state and recovery
 
-Run state lives under a run-scoped `.orchestrate/<slug>` directory in the worker node's repository checkout. The worker node is the source of truth. Keep this state out of product commits and PRs.
+The worker node is the source of truth. Keep state under `.orchestrate/<slug>/` in the target repository checkout, outside product commits and PRs. Use a stable issue-derived slug such as `spec-34`; do not mirror state on the orchestrator node.
 
-## State directory
+## Files
 
-Create `.orchestrate/<slug>/` on the worker node:
+- `run.json` — minimal recovery metadata: spec issue ID/URL, repository identity, worker label/ID, run status, and each tracked agent's role, issue ID, Herdr agent/pane/workspace IDs, branch, and worktree.
+- `events.jsonl` — append-only structured operational events: timestamp, actor/task, action, outcome, and relevant Herdr/Git/tracker IDs. No pane transcripts, copied ticket bodies, plans, or handoff prose.
 
-- `plan.json` — the original goal, repo path/URL, base ref, acceptance criteria, and task definitions (name, type, scoped goal, dependencies, path boundaries, acceptance, verification recipe, retry cap).
-- `state.json` — each task's status, attempt count, worktree path, branch, Herdr session/workspace/pane IDs, and handoff path.
-- `handoffs/<task>.md` — each agent's final response, saved verbatim with task, branch, and execution metadata.
-- `recovery.log` — spawns, recovery, reconciliation, and operator decisions.
+The issue tracker is canonical for ticket status, acceptance criteria, decisions, and communication. Keep agent handoffs and blockers in comments on the relevant task issue; use PR comments for review discussion; use parent-spec comments for milestone rollups. Do not create local handoff files or duplicate tracker content in `run.json`.
 
-Use kebab-case task names. Validate that dependencies and verifier targets exist and that the dependency graph has no cycles before starting work.
+## Claim and label
 
-## Persist immediately
+Before creating a planner, acquire a per-spec launch claim under `.orchestrate/` with an atomic exclusive create. The claim only serializes startup; it is not a second progress record. Record its owner and issue ID. Never steal an uncertain claim.
 
-Persist state immediately after every side effect and record enough Herdr, branch, worktree, and task identity to reconcile execution after interruption. On restart, inspect persisted state and native Herdr status before creating or restarting agents. Never duplicate work solely because a planner session restarted.
+The new planner's first action is to set/verify the parent's `in-progress` label, before reading tickets or dispatching work. After confirmed startup and recording the planner's Herdr IDs, release the launch claim. Release a claim after startup failure only when failure and absence of a running planner are confirmed. Keep it and escalate when the result is uncertain.
 
-A new orchestrator system reconnects to the worker node and syncs from it before resuming; a local copy is not authoritative. Do not create a separate Git branch solely to transfer this state.
+If the parent has `in-progress` but no matching agent is found, do not start a replacement or clear the label. Comment with the mismatch and wait for the user's explicit retry decision. If a matching agent exists but the label is missing, verify the run record, add the label, comment on the repair, and monitor.
 
-## Recovery
+## Persist and recover
 
-On restart, in order:
+Append a structured event after each consequential side effect and enough identity data to match the run to Herdr. The worker log records activity while the orchestrator is unavailable; agents continue posting comments to the tracker.
 
-1. Read `plan.json`, `state.json`, and `handoffs/`.
-2. Discover native Herdr state and reconcile stored IDs with what Herdr actually reports.
-3. Reconcile tracker and Git state.
-4. Reattach to running agents; never duplicate a task just because the session restarted.
+On every invocation or restart:
 
-If reconciliation cannot resolve a state mismatch, stop and escalate rather than guessing.
+1. Read the parent issue, labels, and relevant comments.
+2. Inspect the worker's `run.json` and event log.
+3. Query Herdr agent state and match exact recorded IDs; do not infer ownership from a matching working directory.
+4. Reconcile tracker and Git state before deciding to start a planner. If the worker is unreachable or identities/state disagree, report the blocker and stop rather than guessing.
 
-## Handoffs
+A matching live planner means monitor it through Herdr's read-only list/wait/get/read commands. Never attach to, prompt, or resume it. If there is no matching agent and no `in-progress` label, reconcile any stale run record; start a fresh planner only when no active or ambiguous work remains and a new atomic claim is acquired.
 
-Handoffs are the only information channel between workers and planners. Save each final response verbatim; add a short metadata comment above it with task, branch, worktree, and Herdr identifiers. Do not paraphrase the evidence.
-
-- **Worker** — status (`success`/`partial`/`blocked`), actual branch, what it did, acceptance with evidence, verification tier, commands run, concerns, suggested follow-ups. A worker commits to its task branch and does not merge/rebase/open a PR unless the task requires it. Do not accept `success` if stated acceptance is unmet or evidence is absent.
-- **Verifier** — verification tier, target, execution, findings per criterion (met/not met/n/a) with severity, and environment limits. `verifier-blocked` means the environment prevented a meaningful check; `verifier-failed` means the check ran and the target did not pass. Do not downgrade a failure to a blocked verdict.
-- **Planner** — an aggregated handoff to the parent: status, actual deliverable branch, one bullet per meaningful slice, strongest evidence actually produced, risks, and parent-scope follow-ups.
-
-## Cleanup
-
-At completion, remove only what this run owns and leave everything else untouched.
-
-- **Remove** clean task worktrees (via `git worktree remove`, after accounting for every staged, unstaged, and untracked change) and close only Herdr panes created by this run.
-- **Preserve** dirty or unresolved worktrees — cleanup cannot destroy unfinished work or recovery evidence.
-- **Retain** the worker node's canonical checkout, `.orchestrate/<slug>` state, handoffs, and logs. Never delete retained state automatically. Cleanup of retained state requires an explicit user action.
-- Leave unrelated Herdr panes, tickets, repositories, branches, and PRs untouched.
+Retain `run.json` and `events.jsonl` after completion. The planner removes `in-progress` while closing the parent spec only after all tickets are complete, verified, and merged. Delete retained run state only at the user's explicit request.

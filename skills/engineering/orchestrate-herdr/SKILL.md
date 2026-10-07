@@ -1,35 +1,30 @@
 ---
 name: orchestrate-herdr
-description: "Implement a published spec ticket using Herdr and Pi agents. Use with /skill:orchestrate-herdr <spec-ticket> [worker], such as /skill:orchestrate-herdr 32 obelix; omitted worker uses the current local worker."
+description: "Start or monitor a Herdr/Pi planner for a published spec ticket. Invocation: /skill:orchestrate-herdr ISSUE [WORKER]; omitted worker uses the current local worker."
 disable-model-invocation: true
 ---
 
 # Orchestrate a spec with Herdr
 
-Invocation requires `<spec-ticket>` and optionally accepts `[worker]`. Example: `/skill:orchestrate-herdr 32 obelix`. If the worker is omitted or blank, use the current local worker; otherwise resolve it against `herdr machine list`. Always start a fresh agent for this invocation and for each dispatched task; never reuse or resume an existing agent. The selected worker owns execution and persisted run state.
+This skill takes a tracker issue number and optional Herdr worker node. It checks whether a planner is already running for that spec; if so, it monitors it. Otherwise it starts a planner. Re-run the same command after an orchestrator outage to reconnect monitoring.
 
-**Start by reading the spec ticket and its linked tickets.** Follow the `implement-spec` flow: understand the task graph, create one integration branch, implement ready tickets in isolated worktrees, merge completed work onto the integration branch, and continue as the frontier advances. If there are no linked implementation tickets forming an actionable frontier, invoke `/to-tickets` and follow its approval and publishing process; otherwise, don't create or rewrite tickets.
+The **orchestrator** is the agent session invoking this skill. The **planner** is a fresh agent on the worker node that coordinates the spec workflow. Implementer, reviewer, and merger agents do scoped tasks. Never attach to or resume an existing agent; monitor it through Herdr's read-only agent commands.
 
-This skill is a routing and safety contract. Read the relevant reference before acting:
+Read these references before acting:
 
-- `references/dispatcher.md` — validate the named worker and discover the exact Herdr session and pane.
-- `references/run-loop.md` — spec-first, integration-branch implementation flow.
-- `references/state.md` — persisted state, recovery, cross-system sync, and cleanup.
+- `references/dispatcher.md` — discover an existing run or safely start a planner.
+- `references/run-loop.md` — implement and close the spec.
+- `references/state.md` — worker-side run metadata, event log, claims, and recovery.
 
-## Prerequisites and roles
+## Prerequisites
 
-The selected worker must have this skill, Herdr, Pi, Git, the target repository and credentials, and an authenticated forge CLI (`tea`, `gh`, or `glab`). Run the `forge-cli` preflight there. If anything is missing or ambiguous, stop with actionable guidance; do not guess or dispatch. Start a fresh agent in a newly created pane; do not route work to an existing agent.
+The selected worker must have Herdr, Git, the target repository and credentials, this skill, and an authenticated forge CLI (`tea`, `gh`, or `glab`). Run the `forge-cli` preflight there. If a prerequisite, machine, or run identity is missing or ambiguous, stop with actionable guidance; do not guess or dispatch.
 
-- **Orchestrator** invokes and observes the workflow.
-- **Worker node** is the named machine and source of truth for run state.
-- **Planner** coordinates and verifies; it does not edit product code or merge.
-- **Implementer/merger agents** work only in assigned scopes; no worker merges unless assigned the merger task.
+## Workflow
 
-## Run and finish
+1. Validate the spec issue and worker, then follow `references/dispatcher.md` to find or start its planner.
+2. Monitor the planner and its scoped agents using Herdr's list/wait/get/read commands. Do not attach, prompt, resume, or otherwise control existing agents.
+3. Keep operational events in the worker's `.orchestrate/<slug>/`; use issue and PR comments for communication as defined in `references/run-loop.md`.
+4. Continue until the parent spec issue is closed or human action is required. The planner removes the `in-progress` label as it closes the spec. Retain run metadata and logs unless the user explicitly asks to delete them.
 
-1. Validate the spec ticket and optional worker. Read the spec, all associated tickets, and relevant comments before creating agents or branches.
-2. Follow `references/run-loop.md`; keep all work within the spec and linked tickets. Preserve state and evidence on blockers, failures, or human decisions.
-3. On restart, follow `references/state.md` and reconcile worker-side state before resuming; never duplicate work because the planner restarted.
-4. At completion, clean only clean implementer worktrees and run-owned Herdr panes. Retain state unless the user explicitly asks to delete it.
-
-Report the integration branch or PR, completed tickets, verification/review evidence, blockers, human handoffs, and remaining work. Say `done` only when all tickets are complete and the final review has passed.
+There is no background service. After the orchestrator returns, invoke the same skill with the spec issue and worker node to resume monitoring.

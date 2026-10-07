@@ -1,26 +1,31 @@
-# Dispatcher: resolve the worker and start fresh
+# Dispatcher: find or start the planner
 
-Invocation is `/skill:orchestrate-herdr <spec-ticket> [worker]` (for example, `/skill:orchestrate-herdr 32 obelix`). The spec ticket is required; the worker is optional. If the worker is omitted or blank, use the current local worker and spawn the agent there. If a worker is named, resolve it from `herdr machine list`; if it is missing or ambiguous, stop and ask. Do not silently select a different worker.
+Invocation is `/skill:orchestrate-herdr <spec-ticket> [worker]` (for example, `/skill:orchestrate-herdr 34 obelix`). The spec issue is required. A named worker is the preferred node for a new planner; if omitted or blank, use the current local worker. Never silently select a different machine.
 
-Always start a **new agent** for this orchestration and each dispatched task. Never reuse or resume an existing agent, even if one appears idle or already in the right repository.
+## Find an existing run first
 
-## Validate the target
+1. Confirm the issue exists, is the parent/spec ticket, and is open. If closed, report completion and do not launch anything.
+2. Resolve the named worker with `herdr machine list`; it is the target for a new run. To find an existing run, inspect enabled saved machines using their exact labels/IDs and `herdr --machine <machine> agent list`.
+3. Read the issue's `in-progress` label and locate its `.orchestrate/<slug>/run.json` on candidate worker checkouts. Match exact recorded Herdr workspace/pane/agent IDs. Agent listings show runtime identity and status, not the spec issue; use a working directory only to locate a candidate checkout, never as proof of ownership.
+4. If a matching planner is active, monitor it; do not start another. If the matching run exists but the label is missing, verify the run identity, add `in-progress`, comment on the reconciliation, and monitor.
+5. If `in-progress` is set but no matching agent can be found, do not start a planner. Refresh Herdr and run state to account for propagation delay; if still unmatched, comment on the parent issue with the mismatch and evidence, then stop for human direction. Do not clear the label automatically.
+6. If there is no matching agent and no `in-progress` label, reconcile any existing run metadata, issue comments, and Git state. If there is no active or ambiguous work, proceed to start a planner. If anything is uncertain, stop rather than risk duplicate work.
 
-1. For a named worker, run `herdr machine list` and match it to an available saved machine. Use that exact label or ID with `herdr --machine <worker> ...`; do not treat arbitrary SSH hostnames as valid machine selectors. For the default local worker, stay on the current worker and spawn the agent locally.
-2. For a named worker, confirm the machine is reachable; for the default local worker, inspect the current local Herdr session. In either case, inspect workspaces, panes, and agents. Discover the target repository and ref; do not guess pane IDs, repo paths, or agent kinds.
-3. Confirm the spec ticket exists on the target repository's tracker and is the parent/spec ticket. The new planner must read the spec, linked tickets, and relevant comments before creating work.
-4. Confirm the target has this skill, Pi, Git, repository credentials, and an authenticated forge CLI (run the `forge-cli` preflight). Stop with actionable guidance if not.
-
-Run `herdr --skill` to discover the installed Herdr skills and follow the relevant skill for CLI workflows; use CLI help for exact command syntax. Machine commands require a configured, enabled machine profile and a reachable, API-compatible Herdr server. A connection failure does not prove a mutation failed; inspect remote state before retrying.
+For an untracked agent, do not attach to it or assume it belongs to this spec. Flag it for human review if it appears relevant; otherwise leave it untouched.
 
 ## Start a new planner
 
-Choose a pane in the target repository only as the source for creating a **new sibling pane**. Do not send work to any existing agent pane. Create the new pane with the confirmed repository working directory, read its returned pane ID, then start a fresh Pi agent there using the installed agent kind. If there is no suitable source pane or no available shell in the new pane, stop rather than commandeering an unrelated pane.
+1. On the selected worker, acquire a per-spec launch claim using an atomic exclusive create under `.orchestrate/`. If another invocation holds the claim, reconcile its owner and run state; never steal an uncertain claim.
+2. Create a new sibling pane in the confirmed repository checkout and start a fresh Pi planner agent there. Never use an existing agent pane as the planner. Give the planner the issue number, worker identity, repository path, and references to `run-loop.md` and `state.md`.
+3. The planner's first action is to set/verify the spec's `in-progress` label, before reading tickets or dispatching agents. It then records its Herdr IDs in `run.json` and begins the run loop.
+4. Confirm the planner reaches `working` and the label is set. Release the launch claim only after confirmed startup. If startup failure is confirmed, release the claim and report the failure. If the outcome is uncertain, retain the claim and stop; do not retry blindly.
 
-Submit the exact invocation to that new agent, using the spec ticket and resolved worker (omit the worker when using the current local worker):
+## Monitor and recover
 
-```text
-/skill:orchestrate-herdr <spec-ticket> [worker]
-```
+Use Herdr's read-only commands (`agent list`, `agent wait`, `agent get`, and `agent read`) to observe agents. Do not use `agent attach`, send prompts/keys, or resume existing agents. Wait for Herdr state changes and periodically reconcile agent IDs, worker event logs, tracker comments, and Git state.
 
-Confirm the fresh agent reaches `working` before reporting kickoff success. If startup or submission is uncertain, inspect that new pane/agent before retrying; do not create a duplicate agent blindly. Once the planner is working, report the worker, spec ticket, and new agent/pane, then stop monitoring the full workflow.
+The same skill invocation is the recovery entry point after an orchestrator outage. Workers continue their issue/PR comments and structured event logging while the orchestrator is unavailable. On re-invocation, inspect current state before doing anything. There is no startup daemon.
+
+If a machine is unreachable, check it with `herdr machine status`; when authentication is needed, run `herdr machine reconnect <label-or-id>` and verify connectivity. Retry transient connection failures at most twice after the first attempt. Continue monitoring other reachable work. If the run cannot be safely identified, comment with the blocker and stop; do not dispatch to a different worker.
+
+Herdr machine commands require an enabled saved machine and reachable, API-compatible Herdr server. A failed connection does not prove a mutation failed; reconcile remote state before retrying.
