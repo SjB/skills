@@ -10,6 +10,8 @@ This skill takes a tracker issue number and optional Herdr worker node. It check
 
 The **planner**  runs on the worker node and coordinates the spec workflow. It delegates implementation, review, and merge work to subagents—not separate CLI agents or Herdr-launched agents. Never attach to, prompt, or resume an existing agent.
 
+When the invoking session is itself the planner — the local worker started the planner in this session, or no saved or matching machine and pane exists — the two identities collapse. Do not go looking for a planner to monitor: run the run-loop directly in this session, skip the launch-claim and monitor ceremony, and record the session as both orchestrator and planner in `run.json`.
+
 Read these references before acting:
 
 - `references/dispatcher.md` — discover an existing run or safely start a planner.

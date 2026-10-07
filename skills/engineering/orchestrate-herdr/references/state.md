@@ -5,7 +5,7 @@ The worker node is the source of truth. Keep state under `.orchestrate/<slug>/` 
 ## Files
 
 - `run.json` — minimal recovery metadata: spec issue ID/URL, repository identity, worker label/ID, planner's Herdr agent/pane/workspace IDs, and each tracked child subagent's role, issue ID, subagent run ID, branch, and worktree.
-- `events.jsonl` — append-only structured operational events: timestamp, actor/task, action, outcome, and relevant Herdr/Git/tracker IDs. No pane transcripts, copied ticket bodies, plans, or handoff prose.
+- `events.jsonl` — append-only structured operational events: timestamp, actor/task, action, outcome, and relevant Herdr/Git/tracker IDs. No pane transcripts, copied ticket bodies, plans, or handoff prose. Record a start and finish event for every phase (worktree created, implementer handoff, review dispatched, review completed, merge completed); a phase with only one of the pair is a detectable gap, whereas a silent absence is not.
 
 The issue tracker is canonical for ticket status, acceptance criteria, decisions, and communication. Keep agent handoffs and blockers in comments on the relevant task issue; use PR comments for review discussion; use parent-spec comments for milestone rollups. Do not create local handoff files or duplicate tracker content in `run.json`.
 
@@ -25,7 +25,7 @@ On every invocation or restart:
 
 1. Read the parent issue, labels, and relevant comments.
 2. Inspect the worker's `run.json` and event log.
-3. Query Herdr for the planner and match its exact recorded IDs; inspect the planner's Pi subagent runs for child status. Do not infer ownership from a matching working directory.
+3. Query Herdr agent state and match exact recorded IDs; do not infer ownership from a matching working directory. If the recorded pane was recreated or removed between sessions, match the live entry, rewrite `run.json` to it, and log the reconciliation.
 4. Reconcile tracker and Git state before deciding to start a planner. If the worker is unreachable or identities/state disagree, report the blocker and stop rather than guessing.
 
 If a matching live planner exists, report that it is already running and exit; do not attach to, prompt, or resume it. The planner manages its own subagents. If there is no matching agent and no `in-progress` label, reconcile any stale run record; start a fresh planner only when no active or ambiguous work remains and a new atomic claim is acquired.
