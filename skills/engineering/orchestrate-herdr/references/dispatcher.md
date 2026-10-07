@@ -16,7 +16,7 @@ For an untracked agent, do not attach to it or assume it belongs to this spec. F
 ## Start a new planner
 
 1. On the selected worker, acquire a per-spec launch claim using an atomic exclusive create under `.orchestrate/`. If another invocation holds the claim, reconcile its owner and run state; never steal an uncertain claim.
-2. Create a new sibling pane in the confirmed repository checkout and start a fresh Pi planner agent there. Never use an existing agent pane as the planner. Give the planner the issue number, worker identity, repository path, and references to `run-loop.md` and `state.md`.
+2. Resolve the repository checkout: use the current directory on the local worker; on a remote worker use `~/worktrees/<owner>/<repo>`, cloning there if missing with the canonical `.bare` layout (see the `worktrees` skill). Create a new sibling pane in that checkout and start a fresh Pi planner agent there. Never use an existing agent pane as the planner. Give the planner the issue number, worker identity, repository path, and references to `run-loop.md` and `state.md`.
 3. The planner's first action is to set/verify the spec's `in-progress` label, before reading tickets or dispatching agents. It then records its Herdr IDs in `run.json` and begins the run loop.
 4. Confirm the planner reaches `working` and the label is set. Release the launch claim only after confirmed startup. If startup failure is confirmed, release the claim and report the failure. If the outcome is uncertain, retain the claim and stop; do not retry blindly.
 

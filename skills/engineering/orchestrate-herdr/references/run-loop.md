@@ -4,7 +4,9 @@ The spec and linked tickets define scope; the tracker is the source of truth. Th
 
 The issue tracker should have been provided. If not, tell the user to run `/setup-skills`.
 
-The goal is the entire spec implemented on one **integration branch**, with each ticket resolved according to tracker semantics. Treat tickets as a dependency graph; re-query the tracker as the ready frontier changes. If no ticket is actionable, report the blocker rather than guessing.
+The goal is the entire spec implemented on one **integration branch**, with each ticket resolved according to tracker semantics. Run one task ticket at a time by default. Parallelize only when tickets are both independent and reversible: no shared code, assumptions, or prerequisites, and changes can be rolled back or revised without costly downstream impact. Assess this from the spec, tickets, and code; don't assume. If reversibility or independence is unclear—or a ticket involves a one-way-door decision—work sequentially or ask. Keep parallel work in separate worktrees, then review and merge one ticket at a time, rebasing each onto the latest integration `HEAD`. Re-query the tracker after each merge. If no ticket is actionable, report the blocker rather than guessing.
+
+Use the current directory as the repository locally. On a remote worker, use `~/worktrees/<owner>/<repo>`; if the repository is missing there, clone it using the canonical `.bare` layout (see the `worktrees` skill).
 
 ## Communication
 
@@ -19,14 +21,14 @@ All agent communication and handoffs go through tracker or PR comments; `.orches
 - Confirm the supplied issue is the parent/spec ticket and identify linked implementation tickets.
 - Understand the task graph and current frontier. Re-query tracker state as work advances.
 - When tickets require codebase or external-documentation exploration, use a subagent and put concise findings in the relevant tracker comment for later subagents to reference.
-- Create one integration branch from the intended target branch. If a PR is required, open a draft after the first implementation merge and link it to close the spec and tickets.
+- Create one integration branch from the current `HEAD` of the repository checkout you are working in. Do not switch to or fetch a different base branch first. If a PR is required, open a draft after the first implementation merge and link it to close the spec and tickets.
 - If a ticket or its dependencies are ambiguous, stop and ask rather than infer.
 
 ## 2. Implement the frontier
 
 Use the `subagents` skill and native subagent workflow for every child role. Do not use Herdr agent commands or launch separate CLI processes for implementers, reviewers, fixers, or mergers.
 
-For each open, unblocked ticket, start a **worker subagent** from the planner using the native subagent workflow, with its own worktree and branch. Independent frontier tickets may run concurrently; never parallel-write a shared checkout. Do not launch implementers, reviewers, fixers, or mergers as separate CLI or Herdr agents; the planner is the only full CLI agent. Start a fresh worker subagent for each merge.
+Select one open, unblocked ticket, or a set that meets the parallelism criteria above. Start a **worker subagent** from the planner for each selected ticket using the native subagent workflow, with its own worktree and branch. Never parallel-write a shared checkout. Do not launch implementers, reviewers, fixers, or mergers as separate CLI or Herdr agents; the planner is the only full CLI agent. Start a fresh worker subagent for each merge.
 
 Start each implementer with its role, task-issue URL, worktree path, and starting branch; the issue itself holds scope and acceptance criteria. Put any later clarification or handoff in tracker/PR comments, not agent-to-agent chat. Require the implementer to:
 
@@ -39,7 +41,7 @@ Start each implementer with its role, task-issue URL, worktree path, and startin
 When an implementer finishes, have a **new independent reviewer subagent** run the `code-review`, `security-audit`, and `code-quality-review` skills against that task branch, using the current integration branch as the base. Put review discussion on the PR and summarize its outcome on the task issue. Resolve actionable findings in a fresh scoped worker subagent and rerun review until clear. Only then use a fresh worker subagent to merge the task branch into the integration branch. Before dispatching the merger, confirm the task worktree is clean (`git status --porcelain` empty) and the task branch is fully pushed; recover unpushed or uncommitted work rather than merging around it. Verify the merge and update tracker state before dispatching newly unblocked tickets. Reconcile uncertain Git or tracker outcomes before retrying.
 
 When a check spans tickets — for example one coverage threshold covering several modules — an individual task branch can be red because it owns only part of the check, not because of a defect. Review still runs against the task branch, but assert the shared check after merge, on the integration branch; merge-then-fix is the allowed order in that case. Before deviating from green-before-merge, decide whether the check or the branch is mis-scoped, and record that decision.
- 
+
 ## 3. Final review and completion
 
 After all tickets are implemented and merged, have a **reviewer subagent** run `code-review` against the entire integration branch as a final integration review. Have a fresh worker subagent fix actionable findings in a scoped worktree; merge the fixes and rerun review until clear. Do not report completion until this review is clear and final checks pass; do not merge around unresolved findings or failed checks.
