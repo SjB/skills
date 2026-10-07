@@ -1,14 +1,14 @@
 ---
 name: orchestrate-herdr
-description: "Start or monitor a Herdr/Pi planner for a published spec ticket. Invocation: /skill:orchestrate-herdr ISSUE [WORKER]; omitted worker uses the current local worker."
+description: "Start a Herdr/Pi planner for a published spec ticket. Invocation: /skill:orchestrate-herdr ISSUE [WORKER]; omitted worker uses the current local worker."
 disable-model-invocation: true
 ---
 
 # Orchestrate a spec with Herdr
 
-This skill takes a tracker issue number and optional Herdr worker node. It checks whether a planner is already running for that spec; if so, it monitors it. Otherwise it starts a planner. Re-run the same command after an orchestrator outage to reconnect monitoring.
+This skill takes a tracker issue number and optional Herdr worker node. It checks whether a planner is already running for that spec; if so, it reports that and exits. Otherwise it starts a planner and exits after confirming startup. The planner runs independently; there is no need to monitor it.
 
-The **orchestrator** is the agent session invoking this skill. The **planner** is a fresh agent on the worker node that coordinates the spec workflow. Implementer, reviewer, and merger agents do scoped tasks. Never attach to or resume an existing agent; monitor it through Herdr's read-only agent commands.
+The **planner**  runs on the worker node and coordinates the spec workflow. It delegates implementation, review, and merge work to subagents—not separate CLI agents or Herdr-launched agents. Never attach to, prompt, or resume an existing agent.
 
 Read these references before acting:
 
@@ -23,8 +23,5 @@ The selected worker must have Herdr, Git, the target repository and credentials,
 ## Workflow
 
 1. Validate the spec issue and worker, then follow `references/dispatcher.md` to find or start its planner.
-2. Monitor the planner and its scoped agents using Herdr's list/wait/get/read commands. Do not attach, prompt, resume, or otherwise control existing agents.
-3. Keep operational events in the worker's `.orchestrate/<slug>/`; use issue and PR comments for communication as defined in `references/run-loop.md`.
-4. Continue until the parent spec issue is closed or human action is required. The planner removes the `in-progress` label as it closes the spec. Retain run metadata and logs unless the user explicitly asks to delete them.
-
-There is no background service. After the orchestrator returns, invoke the same skill with the spec issue and worker node to resume monitoring.
+2. If a planner is already active for the spec, report that and exit. Do not attach, prompt, resume, or monitor it.
+3. If starting a planner, confirm it reaches `working`, then report the run identity and exit. The planner owns the workflow from there; retain run metadata and logs unless the user explicitly asks to delete them.

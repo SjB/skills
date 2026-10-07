@@ -1,5 +1,5 @@
 interface:
-  display_name: "Start or monitor a spec with Herdr"
-  short_description: "Start or monitor its planner; completion is parent-ticket closure"
+  display_name: "Start a spec with Herdr"
+  short_description: "Start its planner and exit after startup confirmation"
 policy:
   allow_implicit_invocation: false
