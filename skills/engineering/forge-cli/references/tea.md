@@ -21,6 +21,8 @@ tea comments add ID --description "$(cat BODY_FILE)"
 tea issues close ID
 ```
 
+Prefer these CLI verbs over hand-rolled REST. If `tea` lacks a verb (check `tea pulls --help` for the current close and merge verbs), and you fall back to the Gitea REST API, note that the issue create/update payload takes label **IDs**, while the `/issues/{id}/labels` sub-resource takes **names**. Keep `curl` output out of the transcript by writing it to a file (`curl -s ... -o FILE`).
+
 ## Pull request lifecycle
 
 ```bash
