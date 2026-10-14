@@ -6,11 +6,11 @@ Clarify decisions, capture ideas, and improve project documentation.
 
 - [before-building](before-building/SKILL.md) — Fire the moment the user proposes a build. Instantly surface the 1-3 consequential choices hidden in his idea. Can also be invoked with /before-building.
 - [decisions](decisions/SKILL.md) — Ask the agent to list all choices it made during the current work that it is not confident of. Manual-only; invoke with /decisions.
-- [level-up](level-up/SKILL.md) — Gauge the user''s technical + product knowledge through 7 adaptive questions, log verbatim answers with honest ratings, and grow a learning plan from the gaps found. Use when the user says "level up", "level-up session", "quiz me", "gauge my knowledge", or wants a new assessment round. Differentiator: this finds and maps gaps; the `teach` skill delivers lessons on them.
+- [level-up](level-up/SKILL.md) — Gauge the user''s technical + product knowledge through 7 adaptive questions, log verbatim answers with honest ratings, and grow a learning plan from the gaps found. Use when the user says "level up", "level-up session", "quiz me", "gauge my knowledge", or wants a new assessment round. Differentiator: this finds and maps gaps; the `learning-coach` skill delivers lessons on them.
 - [read-all-adrs](read-all-adrs/SKILL.md) — Read every ADR markdown file in the project's docs/adr/ folder so you have full context on past decisions. Use only when the user explicitly calls it.
 - [remind](remind/SKILL.md) — Rewrite the last response simpler and shorter in plain English, prefixed with a 3-5 sentence TLDR of the conversation so far. Manual-only, invoked as /remind.
 - [short](short/SKILL.md) — Manually-invoked skill that forces the agent to compress its current answer — strip filler, simplify wording, and cut length while keeping the substance. Use when the user says "short", "shorter", "simpler", "too long", "tl;dr", or wants a more concise version of the previous response.
-- [teach](teach/SKILL.md) — Teach the user a new skill or concept, within this workspace.
+- [learning-coach](learning-coach/SKILL.md) — Teach the user a new skill or concept, within this workspace.
 
 ## Model-invoked
 
