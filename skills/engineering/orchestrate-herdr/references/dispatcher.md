@@ -1,6 +1,15 @@
 # Dispatcher: find or start the planner
 
-Invocation is `/skill:orchestrate-herdr <spec-ticket> [worker]` (for example, `/skill:orchestrate-herdr 34 obelix`). The spec issue is required. A named worker is the preferred node for a new planner; if omitted or blank, use the current local worker. Never silently select a different machine.
+Invocation is `/skill:orchestrate-herdr <source-issue> [worker]` (for example, `/skill:orchestrate-herdr 34 obelix`). The source issue may contain a spec, plan, map, or conversation. A named worker is the preferred node for a new planner; if omitted or blank, use the current local worker. Never silently select a different machine.
+
+## Validate the source and work tickets
+
+Before looking for or starting a planner:
+
+1. Read the full source issue and comments with `tea issue <number> --comments -o json`. Confirm it is open and contains enough context to identify the intended outcome. Treat the issue as source material, not automatically as an implementation ticket.
+2. Find its linked child tickets or task-list entries. Confirm the work is represented by implementable tracer-bullet tickets: each delivers a narrow, end-to-end, independently verifiable slice, with blockers recorded. A map, discussion, or high-level plan alone is not a work ticket.
+3. Confirm at least one ticket is ready to start (all blockers closed or absent) and the remaining ticket dependency order is clear. If tickets exist but are too broad, layer-oriented, or lack verifiable outcomes/dependencies, stop and route the source through `to-tickets` for user-approved correction. If no work tickets exist, route through `to-tickets` to propose and publish them, then re-read the tracker and validate the published tickets before continuing.
+4. If the source lacks a clear outcome or the ticket set cannot be validated from tracker evidence, stop and ask for clarification. Do not launch a planner based only on assumptions or a source issue's `in-progress` label.
 
 ## Find an existing run first
 
