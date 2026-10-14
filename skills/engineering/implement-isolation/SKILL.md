@@ -34,7 +34,7 @@ Start a subagent to implement the work in isolation. The subagent receives a sin
 
 - Issue body: the full markdown body of the issue.
 - Comments: all comments, if any
-- Implement: the work described by the user in the spec or tickets, using tdd skill where possible. Run typechecking regularly, run single test files regularly, and run the full test suite once at the end.
+- Implement: the work described by the user in the spec or tickets, using the `test-first` skill where possible. Run typechecking regularly, run single test files regularly, and run the full test suite once at the end.
 
 Completion criterion: The subagent exits with code 0 and all changes are committed.
 

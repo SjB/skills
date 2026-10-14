@@ -57,7 +57,7 @@ docs(adr): remove ADR-NNNN — superseded by ADR-NNNN
 These skills read from `docs/adr/` by relative path — the wiki clone is transparent:
 
 - `diagnosing-bugs`
-- `tdd`
+- `test-first`
 - `improve-codebase-architecture`
 - `domain-modeling`
 - `grill-with-docs`

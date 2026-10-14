@@ -33,7 +33,7 @@ Select one open, unblocked ticket, or a set that meets the parallelism criteria 
 Start each implementer with its role, task-issue URL, worktree path, and starting branch; the issue itself holds scope and acceptance criteria. Put any later clarification or handoff in tracker/PR comments, not agent-to-agent chat. Require the implementer to:
 
 - confirm its worktree starts from the current integration branch (reset/rebase onto it if needed);
-- use the `tdd` skill and run focused checks;
+- use the `test-first` skill and run focused checks;
 - commit its ticket work on its task branch;
 - merge the latest integration branch into its task branch before reporting done;
 - post its handoff on the task issue; do not merge to the integration branch or open a PR.

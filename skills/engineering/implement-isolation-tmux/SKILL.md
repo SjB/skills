@@ -34,7 +34,7 @@ Assemble a single prompt that the child agent will receive. Include:
 
 - **Issue body** — the full markdown body of the issue.
 - **Comments** — all comments, if any
-- **Standing instruction**: "Implement the work described by the user in the spec or tickets, using tdd skill where possible. Run typechecking regularly, run single test files regularly, and run the full test suite once at the end. Once done, use code-review skill to review the work. Commit your work and push the new branch and create a PR with a link to the issue, one-sentence summary, and short key-changes list. Comment on the issue with the PR link: `PR opened: <url>`. Change the issue triage label to needs-review when done. Remove all other labels"
+- **Standing instruction**: "Implement the work described by the user in the spec or tickets, using the `test-first` skill where possible. Run typechecking regularly, run single test files regularly, and run the full test suite once at the end. Once done, use code-review skill to review the work. Commit your work and push the new branch and create a PR with a link to the issue, one-sentence summary, and short key-changes list. Comment on the issue with the PR link: `PR opened: <url>`. Change the issue triage label to needs-review when done. Remove all other labels"
 
 - **Failure instruction**: "If any step fails, report where you stopped and what remains for manual recovery. Print the exact commands needed."
 

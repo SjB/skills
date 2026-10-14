@@ -30,7 +30,7 @@ Write a summary of the current state so a fresh agent can continue the work with
 - **Current state** — what was accomplished, branch/commit, what's working
 - **Next steps** — what needs to be done next, in priority order
 - **Open questions** — decisions still needed, unknowns, trade-offs
-- **Suggested skills** — a bullet list of skills the next agent should invoke (e.g. `/tdd`, `/code-review`)
+- **Suggested skills** — a bullet list of skills the next agent should invoke (e.g. `/test-first`, `/code-review`)
 - **References** — paths or URLs to existing artifacts (PRDs/specs, plans, ADRs, issues/tickets, commits, diffs). Do **not** duplicate their content — reference them.
 
 The summary is a **compass**, not a copy: it points the next agent where to go, it does not replay where you've been. Any content already captured in the referenced artifacts does not belong here.
