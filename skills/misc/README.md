@@ -5,6 +5,7 @@ Kept around but rarely used.
 ## User-invoked
 
 - [bro](bro/SKILL.md) — Restate the last message in plain human language, with no jargon.
+- [code-rationale](code-rationale/SKILL.md) — Investigate code rationale using cited historical evidence.
 - [show-me](show-me/SKILL.md) — Help the user understand the current topic visually with concise diagrams, code-shape sketches, and focused HTML artifacts.
 - [tmux-launch-agent](tmux-launch-agent/SKILL.md) — Fork a new agent CLI session into a new tmux window, detected from the current agent.
 - [visual-verification](visual-verification/SKILL.md) — Verify running desktop UI changes with screenshots and recordings. Use when changing shell styling, layout, panels, menus, notifications, animations, transitions, or capture flows; inspect the artifacts before reporting completion.
