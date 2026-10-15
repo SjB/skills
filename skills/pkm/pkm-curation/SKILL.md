@@ -1,6 +1,7 @@
 ---
 name: pkm-curation
 description: Curate an Obsidian vault — classify notes, normalize frontmatter, add links, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick. 
+disable-model-invocation: true
 ---
 
 # PKM Curation

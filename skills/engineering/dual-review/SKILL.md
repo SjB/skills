@@ -1,6 +1,7 @@
 ---
 name: dual-review
 description: "Run two independent, read-only reviews of a branch diff in parallel — correctness/security and maintainability — then synthesize prioritized findings. Use for a second review axis alongside code-review, a combined deep plus code-quality audit, or when the user asks for dual review. Runs both axes as parallel sub-agents so they do not pollute each other's context."
+disable-model-invocation: true
 ---
 
 # Dual review

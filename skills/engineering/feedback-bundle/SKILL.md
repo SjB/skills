@@ -1,6 +1,7 @@
 ---
 name: feedback-bundle
 description: Post a Gitea feedback issue linked to the current commit and attach logs or screenshots. Use when the user reports a problem and asks to file it with evidence, open a bug ticket, or says "feedback-bundle" or "attach the log".
+disable-model-invocation: true
 ---
 
 # Feedback Bundle

@@ -1,3 +1,5 @@
 interface:
   display_name: "Forge CLI"
   short_description: "Copy-paste, non-interactive CLI for Forge"
+policy:
+  allow_implicit_invocation: true

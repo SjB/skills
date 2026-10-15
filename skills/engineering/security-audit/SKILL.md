@@ -1,6 +1,7 @@
 ---
 name: security-audit
-description: Comprehensive security and correctness audit of a branch's changes. Use for deep review requests, or branch/PR diff audits focused on bugs, breaking changes, security issues, devex regressions, and feature-gate leaks.
+description: Audit branch or PR changes for security and correctness risks, including regressions, devex breaks, and feature-gate leaks. Use for deep change reviews; report only issues in changed code.
+disable-model-invocation: true
 ---
 
 # Security Audit Skill
