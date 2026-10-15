@@ -1,6 +1,6 @@
 ---
 name: dual-review
-description: Two independent reviews of a branch diff: correctness/security and maintainability.
+description: Two independent reviews of a branch diff; correctness/security and maintainability.
 disable-model-invocation: true
 ---
 
