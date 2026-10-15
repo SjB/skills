@@ -1,7 +1,6 @@
 ---
 name: code-quality-review
 description: Strict maintainability review focused on abstraction quality, file size, and branching complexity.
-disable-model-invocation: true
 ---
 
 # Code Quality Review

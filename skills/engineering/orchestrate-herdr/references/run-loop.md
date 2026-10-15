@@ -1,8 +1,8 @@
 # Run loop: implement a spec ticket
 
-The spec and linked tickets define scope; the tracker is the source of truth. The planner's first action is to set/verify the parent issue's `in-progress` label. Then read the spec, every associated ticket, blockers, and relevant comments. If the spec has no linked implementation tickets forming an actionable frontier, invoke `/to-tickets` and follow its approval and publishing process before implementation. If tickets are blocked, don't invent extra work.
+The spec and linked tickets define scope; the tracker is the source of truth. The planner's first action is to set/verify the parent issue's `in-progress` label. Then read the spec, every associated ticket, blockers, and relevant comments. If the spec has no linked implementation tickets forming an actionable frontier, invoke `to-tickets` and follow its approval and publishing process before implementation. If tickets are blocked, don't invent extra work.
 
-The issue tracker should have been provided. If not, tell the user to run `/setup-skills`.
+The issue tracker should have been provided. If not, tell the user to run `setup-skills`.
 
 The goal is the entire spec implemented on one **integration branch**, with each ticket resolved according to tracker semantics. Run one task ticket at a time by default. Parallelize only when tickets are both independent and reversible: no shared code, assumptions, or prerequisites, and changes can be rolled back or revised without costly downstream impact. Assess this from the spec, tickets, and code; don't assume. If reversibility or independence is unclear—or a ticket involves a one-way-door decision—work sequentially or ask. Keep parallel work in separate worktrees, then review and merge one ticket at a time, rebasing each onto the latest integration `HEAD`. Re-query the tracker after each merge. If no ticket is actionable, report the blocker rather than guessing.
 

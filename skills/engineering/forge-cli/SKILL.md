@@ -1,6 +1,6 @@
 ---
 name: forge-cli
-description: Provides copy-paste, non-interactive tea, gh, and glab commands for issue and pull or merge request work. Use whenever a task needs tracker inspection, assignment, labels, comments, reviews, CI, or merge operations.
+description: Non-interactive `tea`, `gh`, and `glab` commands for tracker work. Use for issues, assignment, labels, comments, reviews, CI, or merges.
 ---
 
 # Forge CLI

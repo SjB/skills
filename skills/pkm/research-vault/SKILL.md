@@ -33,7 +33,7 @@ Research/<YYYY-MM-DD> <Topic>/
 
 ### Frontmatter schema
 
-Read `pkm-curation` for the vault's note conventions for the merged OKF and vault frontmatter schema and type vocabulary. Apply only the conventions relevant to this research packet.
+Read [pkm-curation](../pkm-curation/SKILL.md) for the vault's note conventions for the merged OKF and vault frontmatter schema and type vocabulary. Apply only the conventions relevant to this research packet.
 
 ### `index.md` (OKF progressive-disclosure)
 

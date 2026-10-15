@@ -41,7 +41,7 @@ Completion criterion: The summary covers all required sections, references exist
 
 ### 3. Launch the background agent
 
-Use the `tmux-launch-agent` skill to fork a fresh agent seeded with the summary:
+Use the [tmux-launch-agent](../../misc/tmux-launch-agent/SKILL.md) skill to fork a fresh agent seeded with the summary:
 
 ```
 /skill:tmux-launch-agent --name "<descriptive-title>" <handoff-summary>

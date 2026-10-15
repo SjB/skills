@@ -12,4 +12,4 @@ General workflow tools, not code-specific.
 
 ## Model-invoked
 
-- [grilling](grilling/SKILL.md) — Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+- [grilling](grilling/SKILL.md) — Stress-test a plan, decision, or idea by grilling the user. Use when asked to grill or stress-test thinking.

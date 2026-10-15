@@ -1,6 +1,6 @@
 ---
 name: test-first
-description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+description: Use TDD for features or bug fixes. Trigger on “test-first,” “red-green-refactor,” or integration-test requests.
 ---
 
 # Test-Driven Development

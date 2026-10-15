@@ -1,7 +1,6 @@
 ---
 name: security-audit
-description: Audit changed code in a branch or PR for security vulnerabilities, regressions, DevEx breaks, and feature-gate leaks.
-disable-model-invocation: true
+description: Audit changed code in a branch or PR for security vulnerabilities, regressions, and feature-gate leaks.
 ---
 
 # Security Audit Skill

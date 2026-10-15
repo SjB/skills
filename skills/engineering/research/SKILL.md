@@ -1,6 +1,6 @@
 ---
 name: research
-description: Delegate primary-source research and save cited findings in a repo Markdown file. Use for topic research, docs or API fact-finding, or reading-heavy investigations.
+description: Delegate primary-source research and save cited findings in a repo Markdown file. Use for topic research, docs, APIs, specs, or reading-heavy investigations.
 ---
 
 Spin up a **background agent** to do the research, so you keep working while it reads.

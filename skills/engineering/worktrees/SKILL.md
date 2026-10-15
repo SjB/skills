@@ -1,6 +1,6 @@
 ---
 name: worktrees
-description: Manage Git worktrees in a canonical `.bare` repository root. Use when creating, reusing, listing, removing, or repairing worktrees, or when setting up a repository to keep all branch checkouts under one root.
+description: Manage Git worktrees under a canonical `.bare` root. Use to create, reuse, list, remove, or repair worktrees, or set up a repo for them.
 ---
 
 # Git worktrees

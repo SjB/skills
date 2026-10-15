@@ -1,7 +1,5 @@
 # Safety contract
 
-Shared by the arch-maintenance and arch-troubleshooting skills.
-
 ## Distro detection
 
 Read `/etc/os-release`; use `ID` and `ID_LIKE`. Support Arch and CachyOS. On any other distro, stay read-only. Confirm `pacman` is available before any package operation.

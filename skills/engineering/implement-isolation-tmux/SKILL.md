@@ -42,7 +42,7 @@ Completion criterion: The prompt is composed with all required sections (issue b
 
 ### 3. Launch the child via tmux-launch-agent
 
-Use the `tmux-launch-agent` skill to fork the child agent into a new tmux window. Tmux-launch-agent handles agent detection, config lookup, command building (prompt-file or stdin-pipe), mise/SHELL wrapping, and `tmux new-window` creation.
+Use the [tmux-launch-agent](../../misc/tmux-launch-agent/SKILL.md) skill to fork the child agent into a new tmux window. Tmux-launch-agent handles agent detection, config lookup, command building (prompt-file or stdin-pipe), mise/SHELL wrapping, and `tmux new-window` creation.
 
 Pass these parameters:
 

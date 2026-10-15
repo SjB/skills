@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Orchestrate tracker work with Herdr
 
-This skill takes a tracker issue number containing a spec, plan, map, or relevant conversation, plus an optional Herdr worker node. It verifies the issue is a valid work source and that its tracer-bullet tickets exist and are ready to implement before starting or reporting a planner. If tickets are missing, it routes through `to-tickets` to propose and publish them first. It checks whether a planner is already running; if so, it reports that and exits. Otherwise it starts a planner and exits after confirming startup. The planner runs independently; there is no need to monitor it.
+This skill takes a tracker issue number containing a spec, plan, map, or relevant conversation, plus an optional Herdr worker node. It verifies the issue is a valid work source and that its tracer-bullet tickets exist and are ready to implement before starting or reporting a planner. If tickets are missing, it routes through `research`, `to-spec` and `to-tickets` to propose and publish them first. It checks whether a planner is already running; if so, it reports that and exits. Otherwise it starts a planner and exits after confirming startup. The planner runs independently; there is no need to monitor it.
 
 Always start a fresh planner agent in a **new tab** on the specified machine. Never reuse an existing tab or pane.
 

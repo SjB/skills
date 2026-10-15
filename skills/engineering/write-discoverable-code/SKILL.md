@@ -1,6 +1,6 @@
 ---
 name: write-discoverable-code
-description: Name and place code so a plain-text search finds it in one hit. Use when writing or renaming functions, types, constants, files, error messages, or doc comments, including ordinary implementation with no mention of search or discoverability. Not for style, architecture, or type-system design.
+description: Name and place code for one-hit plain-text search. Use when writing or renaming functions, types, constants, files, errors, or docs, including routine implementation. Not for style, architecture, or type design.
 license: MIT
 ---
 

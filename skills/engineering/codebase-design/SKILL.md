@@ -1,7 +1,6 @@
 ---
 name: codebase-design
 description: Shared vocabulary and principles for designing deeper, more testable modules.
-disable-model-invocation: true
 ---
 
 # Codebase Design

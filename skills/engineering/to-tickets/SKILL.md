@@ -1,6 +1,6 @@
 ---
 name: to-tickets
-description: "Break a plan, spec, or the current conversation into tracer-bullet tickets with blocking edges, published to the configured tracker. Use when the user wants tickets from a plan or spec, or an orchestration workflow needs agent-grabbable tickets."
+description: Break a plan, spec, or conversation into tracer-bullet tickets with blocking edges, then publish to the configured tracker. Use when asked to create tickets or make work agent-ready.
 ---
 
 # To Tickets

@@ -2,7 +2,7 @@
 
 Use inside `Research/<YYYY-MM-DD> <Topic>/` unless the vault has a clearer convention.
 
-The packet is an OKF bundle. See [vault-conventions.md](../../vault-conventions.md) for the full frontmatter schema and type vocabulary.
+The packet is an OKF bundle. See `pkm-curation` skill
 
 ## Bundle structure
 

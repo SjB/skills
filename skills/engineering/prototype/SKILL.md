@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Build a throwaway prototype to test a logic or state model, or explore a UI. Use when a quick runnable artifact can resolve a design question.
+description: Build a throwaway prototype for logic or state models, or UI. Use when a runnable example can clarify behavior or design.
 ---
 
 # Prototype

@@ -1,6 +1,6 @@
 ---
 name: wizard
-description: Create interactive Bash wizards for human-only setup or cutovers. Use for provisioning, credentials or CI secrets, unfamiliar dashboards, or one-off migrations—not tasks the agent can do.
+description: Create interactive Bash wizards for human-only setup or cutovers. Use for provisioning credentials or CI secrets, unfamiliar dashboards, or one-off migrations—not tasks the agent can do.
 ---
 
 # Wizard
