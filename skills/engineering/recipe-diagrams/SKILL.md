@@ -1,6 +1,6 @@
 ---
 name: recipe-diagrams
-description: "Recipe diagrams: convert any recipe into a high-resolution Cooking for Engineers-style PNG process-flow table with aligned ingredient streams, preparation branches, joins, temperatures, timings, and finish steps. Use when the user asks for a recipe diagram."
+description: Turn a recipe into a high-resolution Cooking for Engineers-style process-flow PNG.
 compatibility: Requires Python 3 and ImageMagick.
 disable-model-invocation: true
 ---

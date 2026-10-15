@@ -1,6 +1,6 @@
 ---
 name: project-context-pack
-description: Use when the user wants a bounded repo context pack, project map, codebase index, or cached memory file so later work uses fd/rg/tree-sitter/LSP instead of repeated browsing.
+description: Create a bounded repository context pack for future agent sessions.
 disable-model-invocation: true
 ---
 

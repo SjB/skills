@@ -1,6 +1,6 @@
 ---
 name: visual-verification
-description: Verify running desktop UI changes with screenshots and recordings. Use when changing shell styling, layout, panels, menus, notifications, animations, transitions, or capture flows; inspect the artifacts before reporting completion.
+description: Verify desktop UI changes using screenshots and recordings.
 disable-model-invocation: true
 ---
 

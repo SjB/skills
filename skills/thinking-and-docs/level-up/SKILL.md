@@ -1,6 +1,6 @@
 ---
 name: level-up
-description: 'Gauge the user''s technical + product knowledge through 7 adaptive questions, log verbatim answers with honest ratings, and grow a learning plan from the gaps found. Use when the user says "level up", "level-up session", "quiz me", "gauge my knowledge", or wants a new assessment round. Differentiator: this finds and maps gaps; the `learning-coach` skill delivers lessons on them.'
+description: Assess technical and product knowledge, record ratings, and create a learning plan.
 disable-model-invocation: true
 ---
 

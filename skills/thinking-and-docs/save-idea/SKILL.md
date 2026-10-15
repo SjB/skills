@@ -1,6 +1,6 @@
 ---
 name: save-idea
-description: 'Quickly capture a content idea into ~/code/content from any repo or chat. Video ideas go to VIDEO-IDEAS.md; smaller podcast topics, guest ideas, questions, and AI observations go to TOPICS.md. Every entry gets a source line referencing the chat and repo it came from. Use when the user says "/save-idea", "save this idea", "video idea", "add a topic", "write this down for a video/podcast". Differentiator: appends to the user''s content backlog — not a reminder, task, or general note tool.'
+description: Capture content ideas in the user's video or podcast topic backlog.
 disable-model-invocation: true
 ---
 

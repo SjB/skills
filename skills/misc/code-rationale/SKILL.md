@@ -1,6 +1,6 @@
 ---
 name: code-rationale
-description: 'Investigate why code exists or behaves this way using cited historical evidence. Use for design rationale, tradeoffs, regressions, postmortems, and data-backed thresholds. Distinguishes motivation from how the code currently works.'
+description: Investigate code motivation using cited historical evidence and calibrated confidence.
 disable-model-invocation: true
 ---
 

@@ -8,8 +8,8 @@ General workflow tools, not code-specific.
 - [handoff](handoff/SKILL.md) — Compact the current conversation into a handoff document for another agent to pick up.
 - [to-questionnaire](to-questionnaire/SKILL.md) — Turn a decision you can't fully answer into a questionnaire for someone else to fill in.
 - [wait-what](wait-what/SKILL.md) — Stop. That last message did not land: re-pitch it.
+- [writing-for-agents](writing-for-agents/SKILL.md) — Write and maintain agent-facing skills, instructions, and documentation.
 
 ## Model-invoked
 
 - [grilling](grilling/SKILL.md) — Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
-- [writing-for-agents](writing-for-agents/SKILL.md) — Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.

@@ -1,6 +1,6 @@
 ---
 name: youtube-video-capture
-description: Fetch subtitles from a YouTube video, summarize the content, and save both the summary and raw subtitles to the Video bundle in the Obsidian vault. Use when the user wants to capture a YouTube video, mentions "summarize this video", "capture this talk", or pastes a YouTube URL wanting it saved to vault.
+description: Save a YouTube video's summary and raw subtitles into the vault's Video bundle.
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: short
-description: Manually-invoked skill that forces the agent to compress its current answer — strip filler, simplify wording, and cut length while keeping the substance. Use when the user says "short", "shorter", "simpler", "too long", "tl;dr", or wants a more concise version of the previous response.
+description: Shorten the current answer while preserving its substance.
 disable-model-invocation: true
 ---
 

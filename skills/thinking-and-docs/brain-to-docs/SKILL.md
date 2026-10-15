@@ -1,6 +1,6 @@
 ---
 name: brain-to-docs
-description: Use when the user wants to extract project vision, decisions, and preferences from his head into clear documentation (README + ADRs) through a back-and-forth Q&A loop. Triggers on "brain-to-docs", "build out the docs", "extract the vision", "let's document this project".
+description: Extract project vision, decisions, and preferences into a README and ADRs through a Q&A process.
 disable-model-invocation: true
 ---
 

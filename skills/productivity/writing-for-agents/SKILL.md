@@ -1,6 +1,6 @@
 ---
 name: writing-for-agents
-description: Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
+description: Write and maintain agent-facing skills, instructions, and documentation.
 disable-model-invocation: true
 ---
 

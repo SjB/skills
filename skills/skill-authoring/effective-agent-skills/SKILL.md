@@ -1,6 +1,6 @@
 ---
 name: effective-agent-skills
-description: How to write effective agent skills — what to do, what not to do, anatomy, progressive disclosure, design patterns, anti-patterns, testing, security. Read this whenever a skill (Claude Skill, Agent Skill, SKILL.md) is being created, edited, reviewed, or debugged. Use when the user says "create a skill", "new skill", "update this skill", "improve a skill", "why isn't my skill triggering", or anything else involving authoring or editing SKILL.md files.
+description: Reference for designing, authoring, testing, and securing agent skills.
 disable-model-invocation: true
 ---
 

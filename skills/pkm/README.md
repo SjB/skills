@@ -7,8 +7,9 @@ Personal knowledge management.
 - [conversation-summary](conversation-summary/SKILL.md) — Save the current conversation as a comprehensive report note in your Obsidian vault, following OKF v0.1 conventions.
 - [crit](crit/SKILL.md) — Run the CRIT framework — give the AI Context, assign it a Role, let it Interview you one question at a time, then issue the Task.
 - [research-vault](research-vault/SKILL.md) — Research a topic through a one-question-at-a-time learning conversation, answer directly, share resources when useful, and save a linked OKF-conformant research packet in the Obsidian vault.
-- [youtube-video-capture](youtube-video-capture/SKILL.md) — Fetch subtitles from a YouTube video, summarize the content, and save both the summary and raw subtitles to the Video bundle in the Obsidian vault. Use when the user wants to capture a YouTube video, mentions "summarize this video", "capture this talk", or pastes a YouTube URL wanting it saved to vault.
+- [youtube-video-capture](youtube-video-capture/SKILL.md) — Save a YouTube video's summary and raw subtitles into the vault's Video bundle.
+- [pkm-curation](pkm-curation/SKILL.md) — Curate an Obsidian vault by classifying notes, normalizing frontmatter, linking related notes, and extracting atomic notes.
 
 ## Model-invoked
 
-- [pkm-curation](pkm-curation/SKILL.md) — Curate an Obsidian vault — classify notes, normalize frontmatter, add links, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick.
+No skills.
