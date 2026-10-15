@@ -31,30 +31,13 @@ Research/<YYYY-MM-DD> <Topic>/
 
 `index.md` and `log.md` are reserved — they MUST follow OKF format and MUST NOT be used for concept documents.
 
-### Frontmatter schema (merged — OKF + vault fields)
+### Frontmatter schema
 
-Every concept document (non-reserved `.md` file) MUST have:
-
-```yaml
----
-type: <OKF type name>              # OKF required
-title: <display name>              # OKF recommended
-description: <one-line summary>    # OKF recommended
-resource: <canonical URI>          # OKF recommended (when applicable)
-tags: [<tag>, ...]                 # OKF recommended + vault required
-timestamp: <ISO 8601 datetime>     # OKF recommended
-id: <unique identifier>            # vault required
-aliases: [<alias>, ...]            # vault required
-area: <area/domain>                # vault required
-project: <project name or ''>      # vault required
----
-```
-
-Use the type vocabulary from `references/vault-conventions.md`.
+Read `pkm-curation` for the vault's note conventions for the merged OKF and vault frontmatter schema and type vocabulary. Apply only the conventions relevant to this research packet.
 
 ### `index.md` (OKF progressive-disclosure)
 
-No frontmatter. Sections with bullet links and descriptions:
+No frontmatter. Follow `references/research-packet-template.md` for the complete structure; this abbreviated outline shows the key sections:
 
 ```markdown
 # <Topic>
@@ -64,19 +47,28 @@ No frontmatter. Sections with bullet links and descriptions:
 - Scope:
 - Success criteria:
 
+## Main Takeaways
+-
+
 ## Packet Map
 - [Sources](Sources.md) — compiled source list
 - [Synthesis](Synthesis.md) — synthesized answer
 - [Claims](Claims.md) — evidence-backed claims
 - [Questions](Questions.md) — open and resolved questions
-- [Conversation](Conversation.md) — raw conversation record
+- [Conversation](Conversation.md) — conversation report
 - [Glossaries](Glossaries.md) — term definitions
 - [Log](Log.md) — session log
 
+## Related Vault Notes
+-
+
 ## Compiled Pages
-| Page | Type | Purpose | Status |
-|---|---|---|---|
-|  |  |  | draft \| reviewed \| promoted |
+| Page | Type | Purpose | Source basis | Status |
+|---|---|---|---|---|
+|  |  |  |  | draft \| reviewed \| promoted |
+
+## Open Questions
+-
 ```
 
 ### `log.md` (OKF chronological)
@@ -94,14 +86,14 @@ Datestamped entries, newest first:
 ## Workflow
 
 1. **Locate the vault.** Confirm the exact vault root and write only inside it.
-2. **Frame the goal.** Ask one question at a time until you can restate the topic, learning objective, scope, and success criteria. Discover the user's goal, prior knowledge, intended use, depth, constraints, output preference, and trusted/distrusted sources only as needed.
-3. **Create or defer the folder.** Create the packet folder once the topic has a stable working title; if still vague, keep conversing. Before writing durable notes, every artifact must have a path inside the packet folder.
+2. **Frame the goal.** For a focused question, answer directly; ask only for missing information that blocks useful research. For broader work, clarify the learning objective, scope, and success criteria one question at a time. Ask about prior knowledge, intended use, depth, constraints, output preference, and source preferences only when they affect the answer.
+3. **Choose capture depth and folder.** Keep a focused answer conversational unless the user asks to save it or durable capture is clearly useful. For a saved research run, create one packet folder once the topic has a stable title. If the dated folder already exists, inspect and reuse it; do not overwrite or create a duplicate. Before writing durable notes, ensure each artifact has a path inside the packet folder.
 4. **Map context.** Search the vault for the topic, synonyms, projects, and neighboring concepts. Read enough relevant notes to make meaningful links, not keyword matches.
-5. **Ingest sources into claims.** For each source, preserve its path in `Sources.md`, extract evidence-backed claims into `Claims.md`, update affected concept/summary pages, and append an event to `log.md`. Completion: every non-trivial factual claim has source, evidence, confidence, and at least one related link or explicit note that no link exists yet.
+5. **Ingest sources into claims.** For each source in a saved packet, preserve its path in `Sources.md`, extract material evidence-backed claims into `Claims.md`, update affected concept/summary pages, and append an event to `log.md`. In the synthesis, keep citations close to substantive factual claims and record evidence, confidence, and meaningful links where useful; do not force a separate claim entry for incidental facts.
 6. **Research and teach.** Answer the user directly from the compiled packet when possible, explain findings in small chunks, cite claims, preserve uncertainty, share resources when they improve learning or evidence quality, and correct misunderstandings before moving on.
 7. **File good answers.** When a query produces a durable synthesis, decision, comparison, or explanation, add it back into `Synthesis.md`, `Claims.md`, or an atomic note instead of leaving it only in chat. Append the query and filed destination to `log.md`.
-8. **Check understanding and completeness.** Ask one diagnostic or completeness question per turn. Answer follow-ups with evidence, examples, counterarguments, implementation details, or resources as needed. Capture unresolved gaps in `Questions.md`.
-9. **Write incrementally.** For long sessions, update `Conversation.md`, `Questions.md`, `Glossaries.md`, `Sources.md`, and `log.md` as the work progresses. By the end, no research, teaching insight, user question, glossary term, source, or durable knowledge should exist only in chat.
+8. **Check understanding and completeness.** Use a diagnostic question when it will reveal a misunderstanding or unblock the next step, especially for complex topics. Answer follow-ups with evidence, examples, counterarguments, implementation details, or resources as needed. Capture material unresolved gaps in `Questions.md`.
+9. **Write incrementally.** For long or multi-session work, update relevant packet pages as the work progresses. Before finishing a saved packet, file the important findings, user corrections, decisions, and sources; incidental conversation need not be transcribed.
 10. **Lint the packet.** Before final report or promotion, check for unsupported claims, stale or contradictory claims, missing source links, orphan atomic notes, glossary terms without links, unanswered questions, and missing backlinks from `index.md`. Record notable lint findings or fixes in `log.md`.
 11. **Promote reusable notes.** If a packet note becomes broadly useful beyond the run, propose promotion to the main vault, copy or move only with user approval, leave a provenance link in the packet, and update relevant indexes/MOCs.
 12. **Report.** Summarize the packet path, files changed, links or backlink suggestions, top takeaways, what the user now understands, remaining questions, lint status, and promotion candidates.
@@ -112,7 +104,7 @@ Datestamped entries, newest first:
 - Answer the user's question before asking another.
 - If the user is uncertain, offer a small set of options and ask them to choose one.
 - Use a teach-back loop for complex topics: plain-language explanation → concrete example → one check question or restatement prompt → correction → continue only when the user is satisfied or uncertainty is captured.
-- Ask checks before research, after initial framing, after major findings, and before finalizing notes.
+- Use understanding checks before research or at milestones only when uncertainty, complexity, or the user's learning goal makes them useful; do not interrupt a straightforward answer with routine checks.
 - When the user corrects you, record the correction in `Conversation.md`, update affected packet notes, and prefer the corrected framing unless later evidence contradicts it.
 - Record important answers and useful resources in `Conversation.md`; reflect scope-changing details in `index.md`, `Sources.md`, or `Synthesis.md`.
 
@@ -123,7 +115,7 @@ Datestamped entries, newest first:
 - Write claims as answerable units, not vague topics: one sentence that can be supported, contradicted, or revised.
 - For every claim, include evidence, source, confidence, implications, and related notes; use `low` confidence when provenance is weak or the claim is inferred.
 - Prefer updating existing packet pages over creating duplicates; new sources should make the packet denser, not merely bigger.
-- Put every acronym, abbreviation, domain-specific phrase, specialized term, jargon term, and piece of domain nomenclature in `Glossaries.md`, even when explained elsewhere.
+- Add terms to `Glossaries.md` when their definition is important for understanding or likely future retrieval; omit familiar or incidental terminology.
 - Keep sources, synthesis, claims, questions, conversation, glossary, and atomic knowledge separate.
 - Keep citations close to claims; mark confidence when evidence is incomplete or contested.
 - Preserve useful quotes verbatim with attribution.

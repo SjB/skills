@@ -2,7 +2,7 @@
 
 Use inside `Research/<YYYY-MM-DD> <Topic>/` unless the vault has a clearer convention.
 
-The packet is an OKF bundle. See [vault-conventions.md](../../pkm-curation/references/vault-conventions.md) for the full frontmatter schema and type vocabulary.
+The packet is an OKF bundle. See [vault-conventions.md](../../vault-conventions.md) for the full frontmatter schema and type vocabulary.
 
 ## Bundle structure
 
@@ -246,7 +246,7 @@ project: ''
 - Related links:
 ```
 
-Add every acronym, abbreviation, domain-specific phrase, specialized term, jargon term, and domain nomenclature encountered.
+Add terms when their definition is important for understanding or likely future retrieval; omit familiar or incidental terminology.
 
 ## Atomic note
 

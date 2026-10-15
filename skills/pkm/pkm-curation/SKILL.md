@@ -1,6 +1,6 @@
 ---
 name: pkm-curation
-description: Curate an Obsidian vault — classify notes, normalize frontmatter, add links, extract atomic notes. Use when curating, batch-processing, reviewing, or doing a serendipity pick. 
+description: Curate an Obsidian vault by classifying notes, normalizing frontmatter, linking related notes, and extracting atomic notes.
 disable-model-invocation: true
 ---
 
@@ -19,7 +19,7 @@ Use this skill when working inside a Markdown-first vault that follows the [Open
 ## Read This First
 
 - Read `AGENTS.md` in the current repo scope before editing notes.
-- Read `references/vault-conventions.md` when normalizing metadata, deciding note types, or choosing folders. This reference now documents the merged OKF + vault frontmatter schema.
+- Read `references/vault-conventions.md` when normalizing metadata, deciding note types, or choosing folders. It documents the merged OKF + vault frontmatter schema.
 - Read `references/agent-integration.md` when running this skill through an agent.
 - Keep changes small and reviewable.
 - Keep file operations local to the vault unless the user explicitly asks otherwise.
@@ -55,7 +55,7 @@ fd "index.md" "path/to/obsidian-vault"
 
 ## Note-Type Heuristics
 
-Use the type vocabulary from `references/vault-conventions.md`. When inferring a type for a note, use these heuristics:
+Use the type vocabulary from `../vault-conventions.md`. When inferring a type for a note, use these heuristics:
 
 ### Inbox note → `type: Inbox`
 Use when the note is raw capture, partial thinking, copied text, or an unprocessed link dump.
@@ -124,7 +124,7 @@ When working inside a bundle directory:
 - **After modifying an existing note**: if the change is significant, update the description in `index.md` and append an entry to `log.md`.
 - **After deleting or moving a note**: remove or update its entry in `index.md` and append an entry to `log.md`.
 
-The bundle map is defined in `references/vault-conventions.md`. Key bundle directories include: `Knowledge/`, `Notes/` (with sub-bundles), `Resources/` (with sub-bundles), `Profiles/`, `AI Conversation Summaries/`, `Research/<packet>/`, `Projects/<project>/`.
+The bundle map is defined in `../vault-conventions.md`. Key bundle directories include: `Knowledge/`, `Notes/` (with sub-bundles), `Resources/` (with sub-bundles), `Profiles/`, `AI Conversation Summaries/`, `Research/<packet>/`, `Projects/<project>/`.
 
 Non-bundle directories (`Inbox/`, `Dailies/`, `Templates/`, `Clippings/`) do not get `index.md` or `log.md`.
 
