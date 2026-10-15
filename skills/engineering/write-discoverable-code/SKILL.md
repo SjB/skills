@@ -1,29 +1,21 @@
 ---
 name: write-discoverable-code
-description: |
-  Rules for writing code that coding agents (and humans) can find and understand through
-  plain-text search. Apply whenever writing or renaming code: functions, types, constants,
-  files, error messages, doc comments.
-
-  Grounded in measurement: agents navigate by plain-text search, not by AST or
-  language server, so every identifier is a search query and every search miss
-  costs wasted reads.
+description: Name and place code so a plain-text search finds it in one hit. Use when writing or renaming functions, types, constants, files, error messages, or doc comments, including ordinary implementation with no mention of search or discoverability. Not for style, architecture, or type-system design.
 license: MIT
 ---
 
 # Write discoverable code
 
-Coding agents discover code by searching for strings and reading small windows around the
-hits. They have no hover text, no jump-to-definition, and no memory between sessions. These
-rules make code resolvable in one search instead of five.
+The first lookup is usually a plain-text search, and humans never get hover text. Use a language server when you have one; these rules do not replace it. They make the search hit resolve in one read. No memory between sessions.
 
 ## 1. Names are search queries
 
-- **Exported symbols get 2–4 word names, at least one of them a domain word.**
+- **Exported symbols get a domain word and enough extra words to grep uniquely.**
   `diffUserObjects`, not `diff`. `queueEventForDispatch`, not `queue`.
   Measured on a ~700k-line monorepo: 1-word exported names are globally unique 61% of
-  the time; 3-word names 96%; 4+ words 98%. Three words is the knee of the curve.
-  Use the shortest name that greps uniquely; put the rest in the doc comment.
+  the time; 3-word names 96%; 4+ words 98%. Three words is the knee there. In a small
+  repo, two unique words is often enough. Use the shortest name that greps uniquely
+  in the repo you are editing. Do not pad to three.
 - **Give generic verbs their object.** `sanitizeEmailHtml`, not `sanitize`;
   `validateSmtpConfig`, not `validateConfig`. Qualify only as far as uniqueness
   requires, then stop.
@@ -41,37 +33,30 @@ rules make code resolvable in one search instead of five.
 - **When behavior or audience changes, rename in the same commit.** A stale name is
   misinformation with a 100% open rate — that includes visibility markers: a `_private`
   helper that other modules now import needs a public name.
+- **Do not rename a name the outside world requires.** Wire-format fields, generated
+  code, and framework-required names (`getServerSideProps`, protocol fields, JSON keys
+  that must match the wire) stay as they are. A prettier grep is not worth a broken API.
 - **Filenames are names too — never use bare-role filenames.** `config.ts`, `types.ts`,
   `utils.ts`, `helpers.ts`, `handlers.ts` say nothing in a search result and collide with
   every other module's config/types/utils in the repo. Prefix the domain:
   `billing-plan-config.ts`, not `config.ts`. (`index.ts` is acceptable only as a
   thin re-export entry point.)
 
-## 2. Types are the documentation agents can't skip
+## 2. Type names are search queries too
 
-- **Brand your primitive IDs.** `z.string().brand<'UserId'>()` (TS) or newtypes (Rust).
-  A `transferOwnership(userId: string, orgId: string)` signature makes argument
-  transposition invisible; branded types make it a compile error that names the concepts.
-- **Use capability-token parameter types** for privileged operations (e.g. requiring an
-  `OrgScopedDb` instead of a raw connection). A comment is a request; a required type is
-  physics.
-- **Model state with discriminated unions**, not clusters of nullable fields with implicit
-  rules.
-- **Name types like they'll be quoted back** — they will be, in compiler errors the agent
-  uses to self-correct. `OrgScopedDb` explains itself; `Ctx2` does not. Avoid `any`: every
-  `any` is a spot where the compiler goes silent and the agent is back to guessing.
+Compiler errors quote type names back. Name them so that quote is a search hit.
+`OrgScopedDb`, not `Ctx2`. Avoid `any`: the compiler goes silent and the agent is back
+to guessing.
 
 ## 3. Say it where the search lands
 
-- **One-line doc comment on every export**, stating the sharpest constraint the code
-  itself can't show (units, timezone, "source time, not insert time", ownership).
-  The definition is where a name search lands; that line is your whole message.
-- **Write the plain-words phrase in the doc comment.** Searches arrive as natural language
-  ("rate limit", "retry delay"), and camelCase identifiers don't match phrase greps —
-  `RateLimiter` is invisible to a search for "rate limit". The doc comment above each
-  export should contain, in ordinary spaced-out words, the phrase someone would search
-  for: a `SessionExpiryChecker` should say /\*_ Checks whether the user session has
-  expired. _/ so that a grep for "session expired" or "session has expired" lands here.
+- **Doc comment only for what the signature can't show.** Units, timezone, "source time,
+  not insert time", ownership. The definition is where a name search lands. Do not
+  restate the name: `/** Sanitizes email HTML. */` on `sanitizeEmailHtml` is noise.
+- **Plain words only when the identifier will not match the phrase.** Searches arrive
+  as natural language ("rate limit", "retry delay"), and camelCase does not match a
+  phrase grep — `RateLimiter` is invisible to "rate limit". Put the spaced phrase in
+  the doc comment then. If the name already contains those words, don't.
 - **A module should make sense with its imports unread.** Each imported name plus its
   doc line should say enough that the reader never has to open the source module. If
   they do, the import's name is failing, not the reader.
@@ -92,16 +77,19 @@ rules make code resolvable in one search instead of five.
   meaningful only inside one concept belongs inline, and a file per tiny function
   fragments one answer across several reads. The test runs both ways: a module that
   answers many unrelated questions is holding more than one concept.
-- **Colocate tests** (`foo.test.ts` next to `foo.ts`) so one search finds behavior and its
-  specification together.
+- **Follow the repo's test layout.** Colocate (`foo.test.ts` next to `foo.ts`) only when
+  the repo has no convention yet, so one search finds behavior and its specification.
+  Do not invent a second layout.
 - **Mark dead ends.** `@deprecated` on the old path, with a pointer to the new one.
 
 ## Quick checklist before committing
 
 1. Would one search for each new exported name be enough to find its implementation?
-2. Would swapping two arguments of the new function fail the build?
+2. Is the name the shortest that greps uniquely here, not padded to three words?
 3. Is the one thing a caller must know but the signature can't say (units, timezone,
-   ownership, ordering) written right at the definition?
+   ownership, ordering) written at the definition, and not a restatement of the name?
 4. Do all log/error strings exist verbatim in the source?
-5. Did anything change behavior without changing its name?
+5. Did behavior change without a rename — and did wire-format, generated, and
+   framework-required names stay put?
 6. When code moved, is it gone from where it came from?
+7. Do new tests follow the repo's existing test layout?
